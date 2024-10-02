@@ -14,7 +14,8 @@ public class MetricController {
   }
   public void aperturaHeladera(Context context) {
     try {
-      metricsUtils.getRegistry().counter("heladera.aperturas").increment();
+      String heladeraIdParam = context.pathParam("heladeraId");
+      metricsUtils.getRegistry().counter("heladera"+ heladeraIdParam + ".aperturas").increment();
       context.status(HttpStatus.OK);
       log.info("Apertura de heladera registrada.");
     } catch (Exception e) {
