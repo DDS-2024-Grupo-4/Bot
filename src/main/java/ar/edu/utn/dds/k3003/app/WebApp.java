@@ -32,6 +32,8 @@ public class WebApp {
         Javalin app = Javalin.create(config -> config.registerPlugin(micrometerPlugin)).start(port);
 
         app.get("/metrics/aperturaHeladera/{heladeraId}", metricController::aperturaHeladera);
+        app.get("/metrics/trasladosRealizados", metricController::trasladosRealizados);
+        app.get("/metrics/trasladosEnCurso", metricController::trasladosEnCurso);
     }
 
     public static void configureObjectMapper(ObjectMapper objectMapper) {
