@@ -37,6 +37,9 @@ public class WebApp {
         app.get("/metrics/colaboradorConMasPuntos", metricController::colaboradorConMasPuntos);
         app.get("/metrics/cantDonadores", metricController::cantDonadores);
         app.get("/metrics/cantTransportadores", metricController::cantTransportadores);
+        app.get("/metrics/viandasCreadas", metricController::viandasCreadas);
+        app.get("/metrics/viandasDepositadas", metricController::viandasDepositadas);
+        app.get("/metrics/viandasVencidas", metricController::viandasVencidas);
     }
 
     public static void configureObjectMapper(ObjectMapper objectMapper) {
