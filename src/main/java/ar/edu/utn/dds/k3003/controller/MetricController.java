@@ -76,6 +76,8 @@ public class MetricController {
     }
   }
 
+
+
   public void trasladosEnCurso(Context context) {
     try {
       String accion = context.queryParam("accion");
