@@ -19,7 +19,7 @@ public class MetricController {
   private final AtomicInteger cantDonadores = new AtomicInteger(0);
   private final AtomicInteger cantTransportadores = new AtomicInteger(0);
   private final AtomicInteger viandasCreadas = new AtomicInteger(0);
-  private final AtomicInteger viandasDepositadas = new AtomicInteger(0);
+  private final AtomicInteger viandasEnTransporte = new AtomicInteger(0);
   private final AtomicInteger viandasVencidas = new AtomicInteger(0);
 
   public MetricController(DDMetricsUtils metricsUtils) {
