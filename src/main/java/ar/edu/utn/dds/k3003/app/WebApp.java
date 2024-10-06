@@ -33,13 +33,13 @@ public class WebApp {
 
         app.get("/metrics/aperturaHeladera/{heladeraId}", metricController::aperturaHeladera);
         app.get("/metrics/trasladosRealizados", metricController::trasladosRealizados);
-        app.get("/metrics/trasladosEnCurso", metricController::trasladosEnCurso);
-        app.get("/metrics/cantColaboradores", metricController::CantColaboradores);
-        app.get("/metrics/cantDonadores", metricController::cantDonadores);
-        app.get("/metrics/cantTransportadores", metricController::cantTransportadores);
+        app.get("/metrics/trasladosEnCurso/{accion}", metricController::trasladosEnCurso);
+        app.get("/metrics/cantColaboradores/{accion}", metricController::CantColaboradores);
+        app.get("/metrics/cantDonadores/{accion}", metricController::cantDonadores);
+        app.get("/metrics/cantTransportadores/{accion}", metricController::cantTransportadores);
         app.get("/metrics/viandasCreadas", metricController::viandasCreadas);
-        app.get("/metrics/viandasEnTransporte", metricController::viandasEnTransporte);
-        app.get("/metrics/viandasVencidas", metricController::viandasVencidas);
+        app.get("/metrics/viandasEnTransporte/{accion}", metricController::viandasEnTransporte);
+        app.get("/metrics/viandasVencidas/{accion}", metricController::viandasVencidas);
     }
 
     public static void configureObjectMapper(ObjectMapper objectMapper) {
