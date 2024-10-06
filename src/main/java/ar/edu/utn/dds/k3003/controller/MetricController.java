@@ -102,7 +102,6 @@ public class MetricController {
               throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
           }
           context.status(HttpStatus.OK);
-          log.info("Nuevo colaborador agregado");
       } catch (Exception e) {
           context.status(HttpStatus.INTERNAL_SERVER_ERROR);
           log.error("Error al agregar colaborador", e);
