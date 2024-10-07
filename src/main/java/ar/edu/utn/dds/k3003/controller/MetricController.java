@@ -220,7 +220,7 @@ public class MetricController {
 	      log.error("Error al actualizar la cantidad de viandas vencidas", e);
 	    }
 	  }
-    public void resetearMetricas() {
+    public void resetearMetricas(Context context) {
         cantColaboradores.set(0);
         cantDonadores.set(0);
         cantTransportadores.set(0);
