@@ -26,8 +26,8 @@ public class MetricController {
     this.metricsUtils = metricsUtils;
 
       metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores, AtomicInteger::get);
-      metricsUtils.getRegistry().gauge("cantTransportadores", cantColaboradores, AtomicInteger::get);
-      metricsUtils.getRegistry().gauge("cantDonadores   ", cantColaboradores, AtomicInteger::get);
+      metricsUtils.getRegistry().gauge("cantTransportadores", cantTransportadores, AtomicInteger::get);
+      metricsUtils.getRegistry().gauge("cantDonadores   ", cantDonadores, AtomicInteger::get);
   }
 
     // Registro del gauge en la inicialización de tu aplicación o clase
