@@ -92,19 +92,19 @@ public class MetricController {
 
   public void CantColaboradores(Context context) {
       try {
-          String accion = context.pathParamAsClass("accion", String.class).get();
+         /* String accion = context.pathParamAsClass("accion", String.class).get();
 
-          if ("incrementar".equals(accion)) {
+          if ("incrementar".equals(accion)) {*/
               metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores.incrementAndGet());
               log.info("cantColaboradores incrementados.");
-              context.result("cantColaboradores incrementados");
+       /*       context.result("cantColaboradores incrementados");
           } else if ("disminuir".equals(accion)) {
               metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores.decrementAndGet());
               log.info("cantColaboradores disminuidos.");
               context.result("cantColaboradores disminuidos");
           } else {
               throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
-          }
+          }*/
           context.status(HttpStatus.OK);
       } catch (Exception e) {
           context.status(HttpStatus.INTERNAL_SERVER_ERROR);
