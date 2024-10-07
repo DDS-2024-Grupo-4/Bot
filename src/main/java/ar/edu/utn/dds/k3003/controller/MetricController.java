@@ -141,9 +141,11 @@ public class MetricController {
         if ("incrementar".equals(accion)) {
         metricsUtils.getRegistry().gauge("cantTransportadores", cantTransportadores.incrementAndGet());
         log.info("cantidad de transportadores incrementados.");
+        context.result("cantidad de transportadores incrementados");
       } else if ("disminuir".equals(accion)) {
         metricsUtils.getRegistry().gauge("cantTransportadores", cantTransportadores.decrementAndGet());
         log.info("cantidad de transportadores disminuidos.");
+            context.result("cantidad de transportadores disminuidos");
       } else {
         throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
       }
