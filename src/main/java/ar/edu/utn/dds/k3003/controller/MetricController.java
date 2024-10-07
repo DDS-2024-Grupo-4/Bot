@@ -24,12 +24,12 @@ public class MetricController {
 
   public MetricController(DDMetricsUtils metricsUtils) {
     this.metricsUtils = metricsUtils;
+
+      metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores, AtomicInteger::get);
   }
 
     // Registro del gauge en la inicialización de tu aplicación o clase
-    public static void inicializarMetricas() {
-        metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores, AtomicInteger::get);
-    }
+
   public void aperturaHeladera(Context context) {
     try {
       String heladeraIdParam = context.pathParam("heladeraId");

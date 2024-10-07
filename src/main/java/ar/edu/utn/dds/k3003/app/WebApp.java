@@ -30,7 +30,6 @@ public class WebApp {
         final var metricController = new MetricController(metricsUtils);
 
         Javalin app = Javalin.create(config -> config.registerPlugin(micrometerPlugin)).start(port);
-        MetricController.inicializarMetricas();
 
         app.get("/metrics/aperturaHeladera/{heladeraId}", metricController::aperturaHeladera);
         app.get("/metrics/trasladosRealizados", metricController::trasladosRealizados);
