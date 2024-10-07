@@ -34,7 +34,7 @@ public class WebApp {
         app.get("/metrics/aperturaHeladera/{heladeraId}", metricController::aperturaHeladera);
         app.get("/metrics/trasladosRealizados", metricController::trasladosRealizados);
         app.get("/metrics/trasladosEnCurso/{accion}", metricController::trasladosEnCurso);
-        app.get("/metrics/cantColaboradores", metricController::CantColaboradores); ///{accion}
+        app.get("/metrics/cantColaboradores/{accion}", metricController::CantColaboradores);
         app.get("/metrics/cantDonadores/{accion}", metricController::cantDonadores);
         app.get("/metrics/cantTransportadores/{accion}", metricController::cantTransportadores);
         app.get("/metrics/viandasCreadas/{accion}", metricController::viandasCreadas);
