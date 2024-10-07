@@ -190,11 +190,11 @@ public class MetricController {
 		  String accion = context.pathParamAsClass("accion", String.class).get();
 
 	      if ("incrementar".equals(accion)) {
-	          metricsUtils.getRegistry().gauge("viandasCreadas", viandasCreadas.incrementAndGet());
+	          metricsUtils.getRegistry().counter("viandasCreadas").increment();
 	          log.info("viandasCreadas aumento.");
 	          context.result("cantidad de viandas creadas aumento");
 	        } else {
-	          throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
+	          throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar'.");
 	        }
 	      context.status(HttpStatus.OK);
 	    } catch (Exception e) {
@@ -211,7 +211,7 @@ public class MetricController {
 		        log.info("cantidad de viandasEnTransporte aumento.");
 		        context.result("cantidad de viandasEnTransporte aumento");
 		      } else if ("disminuir".equals(accion)) {
-		        metricsUtils.getRegistry().gauge("viandasEnTransporte", viandasEnTransporte.decrementAndGet());
+		        metricsUtils.getRegistry().gauge("viandasEnTransporte", viandasEnTransporte.incrementAndGet());
 		        log.info("cantidad de viandasEnTransporte disminuio.");
 		            context.result("cantidad de viandasEnTransporte disminuio");
 		      } else {
@@ -228,11 +228,11 @@ public class MetricController {
 		  String accion = context.pathParamAsClass("accion", String.class).get();
 
 		  if ("incrementar".equals(accion)) {
-	          metricsUtils.getRegistry().gauge("viandasVencidas", viandasVencidas.incrementAndGet());
+	          metricsUtils.getRegistry().counter("viandasVencidas").increment();
 	          log.info("viandasVencidas aumento.");
 	          context.result("cantidad de viandas creadas aumento");
 	        } else {
-	          throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
+	          throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar'.");
 	        }
 	      context.status(HttpStatus.OK);
 	    } catch (Exception e) {
