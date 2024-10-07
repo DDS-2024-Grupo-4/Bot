@@ -40,6 +40,7 @@ public class WebApp {
         app.get("/metrics/viandasCreadas/{accion}", metricController::viandasCreadas);
         app.get("/metrics/viandasEnTransporte/{accion}", metricController::viandasEnTransporte);
         app.get("/metrics/viandasVencidas/{accion}", metricController::viandasVencidas);
+        app.delete("/metrics/clear}", metricController::resetearMetricas);
     }
 
     public static void configureObjectMapper(ObjectMapper objectMapper) {

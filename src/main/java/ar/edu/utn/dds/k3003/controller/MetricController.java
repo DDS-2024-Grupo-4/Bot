@@ -26,6 +26,8 @@ public class MetricController {
     this.metricsUtils = metricsUtils;
 
       metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores, AtomicInteger::get);
+      metricsUtils.getRegistry().gauge("cantTransportadores", cantColaboradores, AtomicInteger::get);
+      metricsUtils.getRegistry().gauge("cantDonadores   ", cantColaboradores, AtomicInteger::get);
   }
 
     // Registro del gauge en la inicialización de tu aplicación o clase
@@ -118,39 +120,17 @@ public class MetricController {
             log.error("Error al actualizar cantColaboradores", e);
         }
     }
-/*
-  public void CantColaboradores(Context context) {
-      try {
-          String accion = context.pathParamAsClass("accion", String.class).get();
-
-          if ("incrementar".equals(accion)) {
-              metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores.incrementAndGet());
-              log.info("cantColaboradores incrementados.");
-              context.result("cantColaboradores incrementados");
-          } else if ("disminuir".equals(accion)) {
-              metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores.decrementAndGet());
-              log.info("cantColaboradores disminuidos.");
-              context.result("cantColaboradores disminuidos");
-          } else {
-              throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
-          }
-          context.status(HttpStatus.OK);
-      } catch (Exception e) {
-          context.status(HttpStatus.INTERNAL_SERVER_ERROR);
-          log.error("Error al agregar colaborador", e);
-      }
-  }*/
 
   public void cantDonadores(Context context) {
     try {
         String accion = context.pathParamAsClass("accion", String.class).get();
 
       if ("incrementar".equals(accion)) {
-        metricsUtils.getRegistry().gauge("cantDonadores", cantDonadores.incrementAndGet());
+        cantDonadores.incrementAndGet();
         log.info("cantDonadores incrementados.");
           context.result("cantColaboradores incrementados");
       } else if ("disminuir".equals(accion)) {
-        metricsUtils.getRegistry().gauge("cantDonadores", cantDonadores.decrementAndGet());
+        cantDonadores.decrementAndGet();
         log.info("cantDonadores disminuidos.");
           context.result("cantColaboradores disminuidos");
       } else {
@@ -168,11 +148,11 @@ public class MetricController {
         String accion = context.pathParamAsClass("accion", String.class).get();
 
         if ("incrementar".equals(accion)) {
-        metricsUtils.getRegistry().gauge("cantTransportadores", cantTransportadores.incrementAndGet());
+        cantTransportadores.incrementAndGet();
         log.info("cantidad de transportadores incrementados.");
         context.result("cantidad de transportadores incrementados");
       } else if ("disminuir".equals(accion)) {
-        metricsUtils.getRegistry().gauge("cantTransportadores", cantTransportadores.decrementAndGet());
+        cantTransportadores.decrementAndGet();
         log.info("cantidad de transportadores disminuidos.");
             context.result("cantidad de transportadores disminuidos");
       } else {
@@ -240,4 +220,10 @@ public class MetricController {
 	      log.error("Error al actualizar la cantidad de viandas vencidas", e);
 	    }
 	  }
+    public void resetearMetricas() {
+        cantColaboradores.set(0);
+        cantDonadores.set(0);
+        cantTransportadores.set(0);
+        System.out.println("La métrica 'cantColaboradores' ha sido reseteada a 0.");
+    }
 }
