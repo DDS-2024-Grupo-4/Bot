@@ -75,9 +75,11 @@ public class MetricController {
       if ("incrementar".equals(accion)) {
         metricsUtils.getRegistry().gauge("trasladosEnCurso", trasladosEnCurso.incrementAndGet());
         log.info("Traslados en curso incrementados.");
+          context.result("cantColaboradores incrementados");
       } else if ("disminuir".equals(accion)) {
         metricsUtils.getRegistry().gauge("trasladosEnCurso", trasladosEnCurso.decrementAndGet());
         log.info("Traslados en curso disminuidos.");
+          context.result("cantColaboradores disminuidos");
       } else {
         throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
       }
@@ -95,9 +97,11 @@ public class MetricController {
           if ("incrementar".equals(accion)) {
               metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores.incrementAndGet());
               log.info("cantColaboradores incrementados.");
+              context.result("cantColaboradores incrementados");
           } else if ("disminuir".equals(accion)) {
               metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores.decrementAndGet());
               log.info("cantColaboradores disminuidos.");
+              context.result("cantColaboradores disminuidos");
           } else {
               throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
           }
@@ -115,9 +119,11 @@ public class MetricController {
       if ("incrementar".equals(accion)) {
         metricsUtils.getRegistry().gauge("cantDonadores", cantDonadores.incrementAndGet());
         log.info("cantDonadores incrementados.");
+          context.result("cantColaboradores incrementados");
       } else if ("disminuir".equals(accion)) {
         metricsUtils.getRegistry().gauge("cantDonadores", cantDonadores.decrementAndGet());
         log.info("cantDonadores disminuidos.");
+          context.result("cantColaboradores disminuidos");
       } else {
         throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
       }
