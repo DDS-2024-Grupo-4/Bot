@@ -95,7 +95,7 @@ public class MetricController {
          /* String accion = context.pathParamAsClass("accion", String.class).get();
 
           if ("incrementar".equals(accion)) {*/
-              metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores.incrementAndGet());
+              metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores.));
               log.info("cantColaboradores incrementados.");
        /*       context.result("cantColaboradores incrementados");
           } else if ("disminuir".equals(accion)) {
@@ -119,11 +119,11 @@ public class MetricController {
       if ("incrementar".equals(accion)) {
         metricsUtils.getRegistry().gauge("cantDonadores", cantDonadores.incrementAndGet());
         log.info("cantDonadores incrementados.");
-          context.result("cantColaboradores incrementados");
+          context.result("cantDonadores incrementados");
       } else if ("disminuir".equals(accion)) {
         metricsUtils.getRegistry().gauge("cantDonadores", cantDonadores.decrementAndGet());
         log.info("cantDonadores disminuidos.");
-          context.result("cantColaboradores disminuidos");
+          context.result("cantDonadores disminuidos");
       } else {
         throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
       }
