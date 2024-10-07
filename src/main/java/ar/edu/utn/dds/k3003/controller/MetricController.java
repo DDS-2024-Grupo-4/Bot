@@ -15,9 +15,9 @@ import java.util.concurrent.atomic.AtomicReference;
 public class MetricController {
   private final DDMetricsUtils metricsUtils;
   private final AtomicInteger trasladosEnCurso = new AtomicInteger(0);
-  private final AtomicInteger cantColaboradores = new AtomicInteger(0);
-  private final AtomicInteger cantDonadores = new AtomicInteger(0);
-  private final AtomicInteger cantTransportadores = new AtomicInteger(0);
+  private AtomicInteger cantColaboradores = new AtomicInteger(0);
+  private AtomicInteger cantDonadores = new AtomicInteger(0);
+  private AtomicInteger cantTransportadores = new AtomicInteger(0);
   private final AtomicInteger viandasCreadas = new AtomicInteger(0);
   private final AtomicInteger viandasEnTransporte = new AtomicInteger(0);
   private final AtomicInteger viandasVencidas = new AtomicInteger(0);
@@ -25,6 +25,11 @@ public class MetricController {
   public MetricController(DDMetricsUtils metricsUtils) {
     this.metricsUtils = metricsUtils;
   }
+
+    // Registro del gauge en la inicialización de tu aplicación o clase
+    public static void inicializarMetricas() {
+        metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores, AtomicInteger::get);
+    }
   public void aperturaHeladera(Context context) {
     try {
       String heladeraIdParam = context.pathParam("heladeraId");
@@ -90,6 +95,30 @@ public class MetricController {
     }
   }
 
+    // Método para manejar el incremento/disminución
+    public void CantColaboradores(Context context) {
+        try {
+            String accion = context.pathParamAsClass("accion", String.class).get();
+
+            if ("incrementar".equals(accion)) {
+                cantColaboradores.incrementAndGet();  // Incrementamos el contador
+                log.info("cantColaboradores incrementados.");
+                context.result("cantColaboradores incrementados");
+            } else if ("disminuir".equals(accion)) {
+                cantColaboradores.decrementAndGet();  // Disminuimos el contador
+                log.info("cantColaboradores disminuidos.");
+                context.result("cantColaboradores disminuidos");
+            } else {
+                throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
+            }
+
+            context.status(HttpStatus.OK);
+        } catch (Exception e) {
+            context.status(HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error("Error al actualizar cantColaboradores", e);
+        }
+    }
+/*
   public void CantColaboradores(Context context) {
       try {
           String accion = context.pathParamAsClass("accion", String.class).get();
@@ -110,7 +139,7 @@ public class MetricController {
           context.status(HttpStatus.INTERNAL_SERVER_ERROR);
           log.error("Error al agregar colaborador", e);
       }
-  }
+  }*/
 
   public void cantDonadores(Context context) {
     try {
