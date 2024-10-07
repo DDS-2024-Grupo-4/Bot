@@ -29,6 +29,7 @@ public class MetricController {
       metricsUtils.getRegistry().gauge("cantTransportadores", cantTransportadores, AtomicInteger::get);
       metricsUtils.getRegistry().gauge("cantDonadores   ", cantDonadores, AtomicInteger::get);
       metricsUtils.getRegistry().gauge("viandasEnTransporte   ", viandasEnTransporte, AtomicInteger::get);
+      metricsUtils.getRegistry().gauge("trasladosEnCurso   ", trasladosEnCurso, AtomicInteger::get);
   }
 
     // Registro del gauge en la inicialización de tu aplicación o clase
@@ -83,11 +84,11 @@ public class MetricController {
       String accion = context.queryParam("accion");
 
       if ("incrementar".equals(accion)) {
-        metricsUtils.getRegistry().gauge("trasladosEnCurso", trasladosEnCurso.incrementAndGet());
+        trasladosEnCurso.incrementAndGet();
         log.info("Traslados en curso incrementados.");
           context.result("cantColaboradores incrementados");
       } else if ("disminuir".equals(accion)) {
-        metricsUtils.getRegistry().gauge("trasladosEnCurso", trasladosEnCurso.decrementAndGet());
+        trasladosEnCurso.decrementAndGet();
         log.info("Traslados en curso disminuidos.");
           context.result("cantColaboradores disminuidos");
       } else {
