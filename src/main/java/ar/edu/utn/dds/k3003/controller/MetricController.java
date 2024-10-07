@@ -187,14 +187,15 @@ public class MetricController {
   
   public void viandasCreadas(Context context) {
 	  try {
-	      String accion = context.queryParam("accion");
+		  String accion = context.pathParamAsClass("accion", String.class).get();
 
 	      if ("incrementar".equals(accion)) {
-	        metricsUtils.getRegistry().gauge("viandasCreadas", new AtomicInteger(0)).incrementAndGet();
-	        log.info("viandasCreadas aumento.");
-	      } else {
-	        throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
-	      }
+	          metricsUtils.getRegistry().gauge("viandasCreadas", viandasCreadas.incrementAndGet());
+	          log.info("viandasCreadas aumento.");
+	          context.result("cantidad de viandas creadas aumento");
+	        } else {
+	          throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
+	        }
 	      context.status(HttpStatus.OK);
 	    } catch (Exception e) {
 	      context.status(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -203,17 +204,19 @@ public class MetricController {
 	  }
   public void viandasEnTransporte(Context context) {
 	  try {
-	      String accion = context.queryParam("accion");
+		  String accion = context.pathParamAsClass("accion", String.class).get();
 
-	      if ("viandasEnTransporte".equals(accion)) {
-	        metricsUtils.getRegistry().gauge("viandasEnTransporte", new AtomicInteger(0)).incrementAndGet();
-	        log.info("viandasEnTransporte aumento.");
-	      } else if ("disminuir".equals(accion)) {
-	        metricsUtils.getRegistry().gauge("viandasEnTransporte", new AtomicInteger(0)).decrementAndGet();
-	        log.info("viandasEnTransporte disminuyo.");
-	      } else {
-	        throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
-	      }
+		  if ("incrementar".equals(accion)) {
+		        metricsUtils.getRegistry().gauge("viandasEnTransporte", viandasEnTransporte.incrementAndGet());
+		        log.info("cantidad de viandasEnTransporte aumento.");
+		        context.result("cantidad de viandasEnTransporte aumento");
+		      } else if ("disminuir".equals(accion)) {
+		        metricsUtils.getRegistry().gauge("viandasEnTransporte", viandasEnTransporte.decrementAndGet());
+		        log.info("cantidad de viandasEnTransporte disminuio.");
+		            context.result("cantidad de viandasEnTransporte disminuio");
+		      } else {
+		        throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
+		      }
 	      context.status(HttpStatus.OK);
 	    } catch (Exception e) {
 	      context.status(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -222,14 +225,15 @@ public class MetricController {
 	  }
   public void viandasVencidas(Context context) {
 	  try {
-	      String accion = context.queryParam("accion");
+		  String accion = context.pathParamAsClass("accion", String.class).get();
 
-	      if ("incrementar".equals(accion)) {
-	        metricsUtils.getRegistry().gauge("viandasVencidas", new AtomicInteger(0)).incrementAndGet();
-	        log.info("viandasVencidas aumento.");
-	      } else {
-	        throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
-	      }
+		  if ("incrementar".equals(accion)) {
+	          metricsUtils.getRegistry().gauge("viandasVencidas", viandasVencidas.incrementAndGet());
+	          log.info("viandasVencidas aumento.");
+	          context.result("cantidad de viandas creadas aumento");
+	        } else {
+	          throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
+	        }
 	      context.status(HttpStatus.OK);
 	    } catch (Exception e) {
 	      context.status(HttpStatus.INTERNAL_SERVER_ERROR);
