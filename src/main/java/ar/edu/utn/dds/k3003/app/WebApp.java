@@ -31,9 +31,11 @@ public class WebApp {
 
         Javalin app = Javalin.create(config -> config.registerPlugin(micrometerPlugin)).start(port);
 
-        app.get("/metrics/aperturaHeladera/{heladeraId}", metricController::aperturaHeladera);
+        app.get("/metrics/aperturaHeladera", metricController::aperturaHeladera);
+        app.get("/metrics/fallaHeladeras", metricController::fallaHeladeras);
+        app.get("/metrics/incidentes/{accion}", metricController::incidentesActivos);
         app.get("/metrics/trasladosRealizados", metricController::trasladosRealizados);
-        app.get("/metrics/trasladosEnCurso/{accion}", metricController::trasladosEnCurso);
+        app.get("/metrics/trasladosEnCurso/ć", metricController::trasladosEnCurso);
         app.get("/metrics/cantColaboradores/{accion}", metricController::CantColaboradores);
         app.get("/metrics/cantDonadores/{accion}", metricController::cantDonadores);
         app.get("/metrics/cantTransportadores/{accion}", metricController::cantTransportadores);

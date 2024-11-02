@@ -14,6 +14,10 @@ import java.util.concurrent.atomic.AtomicReference;
 @Slf4j
 public class MetricController {
   private final DDMetricsUtils metricsUtils;
+
+  private final AtomicInteger incidentesActivos = new AtomicInteger(0);
+  private final AtomicInteger fallasEnHeladeras = new AtomicInteger(0);
+  private final AtomicInteger aperturasHeladera = new AtomicInteger(0);
   private final AtomicInteger trasladosEnCurso = new AtomicInteger(0);
   private AtomicInteger cantColaboradores = new AtomicInteger(0);
   private AtomicInteger cantDonadores = new AtomicInteger(0);
@@ -24,7 +28,9 @@ public class MetricController {
 
   public MetricController(DDMetricsUtils metricsUtils) {
     this.metricsUtils = metricsUtils;
-
+      metricsUtils.getRegistry().gauge("incidentesActivos", incidentesActivos, AtomicInteger::get);
+      metricsUtils.getRegistry().gauge("fallasEnHeladeras", fallasEnHeladeras, AtomicInteger::get);
+      metricsUtils.getRegistry().gauge("aperturaHeladera", aperturasHeladera, AtomicInteger::get);
       metricsUtils.getRegistry().gauge("cantColaboradores", cantColaboradores, AtomicInteger::get);
       metricsUtils.getRegistry().gauge("cantTransportadores", cantTransportadores, AtomicInteger::get);
       metricsUtils.getRegistry().gauge("cantDonadores   ", cantDonadores, AtomicInteger::get);
@@ -36,8 +42,7 @@ public class MetricController {
 
   public void aperturaHeladera(Context context) {
     try {
-      String heladeraIdParam = context.pathParam("heladeraId");
-      metricsUtils.getRegistry().counter("heladerasAperturas").increment();
+      aperturasHeladera.incrementAndGet();
       context.status(HttpStatus.OK);
       log.info("Apertura de heladera registrada.");
     } catch (Exception e) {
@@ -45,25 +50,30 @@ public class MetricController {
       log.error("Error al registrar la apertura de la heladera", e);
     }
   }
-  public void excesoTemperaturaHeladera(Context context){
-    try{
-    String heladeraId = context.pathParam("heladeraId");
-    metricsUtils.getRegistry().counter("excesoTemperaturaHeladera"+heladeraId).increment();
-    context.status(HttpStatus.OK);
-    log.info("Exceso de temperatura registrada.");
+    public void incidentesActivos(Context context) {
+        String accion = context.pathParamAsClass("accion", String.class).get();
+
+        if ("incrementar".equals(accion)) {
+            incidentesActivos.incrementAndGet();
+            log.info("cantidad de Incidentes incrementados.");
+            context.result("cantidad de Incidentes incrementados");
+        } else if ("disminuir".equals(accion)) {
+            incidentesActivos.decrementAndGet();
+            log.info("cantidad de Incidentes disminuidos.");
+            context.result("cantidad de Incidentes disminuidos");
+        } else {
+            throw new IllegalArgumentException("Acción no válida. Debe ser 'incrementar' o 'disminuir'.");
+        }
+        context.status(HttpStatus.OK);
+  }
+
+  public void fallaHeladeras(Context context){
+    fallasEnHeladeras.incrementAndGet();
+    try{context.status(HttpStatus.OK);
+    log.info("Falla Registrada en una heladera.");
     } catch (Exception e) {
     context.status(HttpStatus.INTERNAL_SERVER_ERROR);
-    log.error("Error al registrar un exceso de temperatura en la heladera", e);
-    }
-  }
-  public void consultaHeladera(Context context) {
-    try {
-      metricsUtils.getRegistry().counter("consultaHeladeras").increment();
-      context.status(HttpStatus.OK);
-      log.info("Consulta de heladera registrada.");
-    } catch (Exception e) {
-      context.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      log.error("Error al registrar la consulta de la heladera", e);
+    log.error("Error al registrar una falla en una heladera", e);
     }
   }
   public void trasladosRealizados(Context context) {
