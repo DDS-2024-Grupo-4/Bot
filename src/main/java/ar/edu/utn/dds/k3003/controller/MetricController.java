@@ -81,7 +81,7 @@ public class MetricController {
 
   public void trasladosEnCurso(Context context) {
     try {
-      String accion = context.queryParam("accion");
+        String accion = context.pathParamAsClass("accion", String.class).get();
 
       if ("incrementar".equals(accion)) {
         trasladosEnCurso.incrementAndGet();
