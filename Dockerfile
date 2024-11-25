@@ -17,4 +17,4 @@ COPY --from=build /target/Metrics.jar Metrics.jar
 
 EXPOSE 8080
 
-CMD ["java","-classpath","Metrics.jar","ar.edu.utn.dds.k3003.app.WebApp"]
+CMD ["java","-classpath","Metrics.jar","ar.edu.utn.dds.k3003.app.BotApp"]
