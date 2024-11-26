@@ -4,8 +4,12 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Comandos extends TelegramLongPollingBot {
     private BotLogistica botLogistica;
+    private Map<Long, String> esperandoUsuarios = new HashMap<>();
 
     public Comandos() {
         this.botLogistica = new BotLogistica();
@@ -19,25 +23,23 @@ public class Comandos extends TelegramLongPollingBot {
             case "/help":
                 sendMessage(chatId, "Lista de comandos:\n" +
                         "/start - Inicia el bot\n" +
-                        "/menu - Muestra el menú\n" +
-                        "/info - Información sobre el bot");
-                break;
-            case "/info":
-                sendMessage(chatId, "Soy un bot creado para ayudarte con tu aplicación.");
+                        "/menu - Muestra el menú\n" );
                 break;
             case "/menu":
                 showMenu(chatId);
                 break;
             case "/darDeAltaRuta":
-                String respuesta = botLogistica.darAltaRuta();
-                sendMessage(chatId, respuesta);
+                esperandoUsuarios.put(chatId, "darDeAltaRuta");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`colaboradorId heladeraOrigenId heladeraDestinoId`\n" +
+                        "Ejemplo: `5 1 2`");
                 break;
             default:
                 sendMessage(chatId, "Comando no reconocido.");
         }
     }
 
-    private void sendMessage(Long chatId, String text) {
+    public void sendMessage(Long chatId, String text) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId.toString());
         message.setText(text);
@@ -52,16 +54,23 @@ public class Comandos extends TelegramLongPollingBot {
     public void showMenu(Long chatId) {
         String menuText = "Elige una opción:\n" +
                 "/verDatos - Ver mis datos\n" +
-                "/darDeAltaRuta - Crear ruta\n" +
-                "/crearVianda - Crear vianda\n" +
-                "/retirarVianda - Retirar vianda\n" +
-                "/verIncidencias - Ver incidencias\n" +
-                "/verHeladeras - Ver heladeras en zona\n";
+                "/darDeAltaRuta - Crear ruta\n";
 
-        sendMessage(chatId, menuText); // Enviar el menú como texto
+        //aca poner todos los comandos
+
+        sendMessage(chatId, menuText);
     }
 
+    public void onMessageReceived1(Long chatId, String message) {
+        sendMessage(chatId, "entro a onMessageRecieved1");
+        String estado = esperandoUsuarios.getOrDefault(chatId, "");
 
+        switch (estado) {
+            case "darDeAltaRuta":
+                botLogistica.darDeAltaRuta(chatId, message, this);
+                break;
+        }
+    }
 
     @Override
     public void onUpdateReceived(Update update) {

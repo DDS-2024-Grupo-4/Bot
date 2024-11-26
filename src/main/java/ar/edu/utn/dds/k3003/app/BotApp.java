@@ -39,7 +39,7 @@ public class BotApp extends TelegramLongPollingBot  {
             if (messageText.startsWith("/")) {
                 commandsHandler.handleCommand(chatId, messageText);
             } else {
-                sendMessage(chatId, "No reconozco ese comando.");
+                commandsHandler.onMessageReceived1(chatId, messageText);
             }
         }
     }
