@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 
 public class BotLogistica {
 
@@ -35,13 +36,10 @@ public class BotLogistica {
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
-            // Crear el cliente HTTP
             HttpClient client = HttpClient.newHttpClient();
 
-            // Enviar la solicitud y obtener la respuesta
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // Manejar la respuesta
             if (response.statusCode() == 201) {
                 comandos.sendMessage(chatId, "Ruta creada exitosamente");
                 System.out.println("Ruta creada exitosamente: " + response.body());
@@ -57,16 +55,81 @@ public class BotLogistica {
     }
 
 
-    public void asignarTraslado(){
+    public void asignarTraslado(Long chatId, String mensaje, Comandos comandos){
+        String[] partes = mensaje.split("\\s+");
 
+        String listQrViandas = partes[0];
+        String status = partes[1];
+        String fechaTraslado = partes[2];
+        int heladeraOrigen = Integer.parseInt(partes[3]);
+        int heladeraDestino = Integer.parseInt(partes[4]);
+
+        try {
+            String requestBody = String.format(
+                    "{\"listQrViandas\": [\"%s\"], \"status\": \"%s\", \"fechaTraslado\": \"%s\", \"heladeraOrigen\": %d, \"heladeraDestino\": %d}",
+                    listQrViandas, status, fechaTraslado, heladeraOrigen, heladeraDestino
+            );
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url + "/traslados"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 201) {
+                comandos.sendMessage(chatId, "Traslado asignado exitosamente");
+                System.out.println("Traslado asignado exitosamente: " + response.body());
+            } else {
+                comandos.sendMessage(chatId,"Error al aignar el traslado");
+                System.out.println("Error al aignar el traslado: " + response.statusCode() + " - " + response.body());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            comandos.sendMessage(chatId,"Ocurrió un error al asignar el traslado");
+            System.out.println("Ocurrió un error al asignar el traslado: " + e.getMessage());
+        }
     }
 
-    public void iniciarTraslado(){
-        //aca le mando a modificarEstado EN_VIAJE
-    }
+    public void iniciarFinalizarTraslado(Long chatId, String mensaje, Comandos comandos){
+        String[] partes = mensaje.split("\\s+");
 
-    public void finalizarTraslado(){
-        //aca le mando a modificarEstado ENTREGADO
+        System.out.println("entro a iniciar finalizar traslado");
+
+        String status = partes[0];
+        int idTraslado = Integer.parseInt(partes[1]);
+
+        try {
+            String requestBody = String.format(
+                    "{\"status\": \"%s\"}",
+                    status
+            );
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url + "/traslados/" + idTraslado))
+                    .header("Content-Type", "application/json")
+                    .method("PATCH", HttpRequest.BodyPublishers.ofString(requestBody)) // Método PATCH
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 201) {
+                comandos.sendMessage(chatId, "Traslado iniciado exitosamente");
+                System.out.println("Traslado iniciado exitosamente: " + response.body());
+            } else {
+                comandos.sendMessage(chatId,"Error al aignar el trasladoa");
+                System.out.println("Error al iniciar el traslado: " + response.statusCode() + " - " + response.body());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            comandos.sendMessage(chatId,"Ocurrió un error al asignar el traslado");
+            System.out.println("Ocurrió un error al iniciar el traslado: " + e.getMessage());
+        }
     }
 
 
