@@ -15,6 +15,7 @@ public class BotLogistica {
 
     Dotenv dotenv = Dotenv.load();
     String url = dotenv.get("URL_LOGISTICA");
+    String urlColaboradores = dotenv.get("URL_COLABORADORES");
 
     public void darDeAltaRuta(Long chatId, String mensaje, Comandos comandos) {
 
@@ -133,7 +134,20 @@ public class BotLogistica {
     }
 
 
+    public void agregarColaborador(Long chatId, String message, Comandos comandos) {
+    }
 
+    public void modificarFormaDeColaborar(Long chatId, String message, Comandos comandos) {
+    }
+
+    public void reportarHeladera(Long chatId, String message, Comandos comandos) {
+    }
+
+    public void repararHeladera(Long chatId, String message, Comandos comandos) {
+    }
+
+    public void Puntos(Long chatId, String message, Comandos comandos) {
+    }
 }
 
 

@@ -47,6 +47,38 @@ public class Comandos extends TelegramLongPollingBot {
                         "`status`\n" +
                         "Ejemplo: `ENTREGADO 1`");
                 break;
+
+            case "/agregarColaborador":
+                esperandoUsuarios.put(chatId, "agregarColaborador");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`nombre FormaDeColaborar`\n" +
+                        "Ejemplo: `pepito DONADOR`");
+                break;
+
+            case  "/modificarFormaDeColaborar":
+                esperandoUsuarios.put(chatId, "modificarFormaDeColaborar"); // FUNCIONA???
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato (puede elegir mas de una):\n" +
+                        "`[formaDeColaborar]`\n" +
+                        "Ejemplo: `DONADOR TRANSPORTADOR TECNICO`");
+                break;
+            case  "/reportarHeladeraRota":
+                esperandoUsuarios.put(chatId, "reportarHeladeraRota");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato :\n" +
+                        "`heladeraID`\n" +
+                        "Ejemplo: `1`");
+                break;
+            case   "/repararHeladera":
+                esperandoUsuarios.put(chatId, "repararHeladera");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`colaboradorID heladeraID`\n" +
+                        "Ejemplo: `1 4`");
+                break;
+            case   "/verMisPuntos":
+                esperandoUsuarios.put(chatId, "verMisPuntos");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`colaboradorID`\n" +
+                        "Ejemplo: `1`");
+                break;
             default:
                 sendMessage(chatId, "Comando no reconocido.");
         }
@@ -71,9 +103,14 @@ public class Comandos extends TelegramLongPollingBot {
                 "/asignarTraslado - asigna un traslado a un colaborador\n" +
                 "/iniciarTraslado - inicia un traslado de una vianda\n" +
                 "/finalizarTraslado - finaliza el traslado de una vianda\n\n" +
+                "COLABORADORES:\n" +
+                "/agregarColaborador\n" +
+                "/modificarFormaDeColaborar\n" +
+                "/reportarHeladeraRota\n" +
+                "/repararHeladera - reporta que la heladera ha sido reparada\n" +
+                "/verMisPuntos\n" +     //Si me da tiempo agregar forma de ver reparaciones, donaciones de dinero, etc
                 "VIANDAS:\n\n" +
                 "HELADERAS:\n\n" +
-                "COLABORADORES:\n" +
                 "/verDatos - Ver mis datos\n";
 
         //aca poner todos los comandos
@@ -94,6 +131,23 @@ public class Comandos extends TelegramLongPollingBot {
             case "iniciarFinalizarTraslado":
                botLogistica.iniciarFinalizarTraslado(chatId, message, this);
                 break;
+
+            case "agregarColaborador":
+                botLogistica.agregarColaborador(chatId, message, this);
+                break;
+            case "modificarFormaDeColaborar":
+                botLogistica.modificarFormaDeColaborar(chatId, message, this);
+                break;
+            case "reportarHeladeraRota":
+                botLogistica.reportarHeladera(chatId, message, this);
+                break;
+            case "repararHeladera":
+                botLogistica.repararHeladera(chatId, message, this);
+                break;
+            case "verMisPuntos":
+                botLogistica.Puntos(chatId, message, this);
+                break;
+
         }
     }
 
