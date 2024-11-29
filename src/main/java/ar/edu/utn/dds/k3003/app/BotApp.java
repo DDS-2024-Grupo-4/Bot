@@ -18,10 +18,10 @@ public class BotApp extends TelegramLongPollingBot  {
         Dotenv dotenv = Dotenv.load();
 
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-        System.out.println("ya esta corriendo");
 
         try {
             telegramBotsApi.registerBot(new BotApp());
+            System.out.println("ya esta corriendo");
         } catch (Exception e) {
             e.printStackTrace();
         }
