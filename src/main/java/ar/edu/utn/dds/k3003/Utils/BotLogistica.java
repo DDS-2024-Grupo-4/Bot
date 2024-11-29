@@ -20,7 +20,7 @@ import java.util.List;
 public class BotLogistica {
 
     Dotenv dotenv = Dotenv.load();
-    String urlLogistica = dotenv.get("URL_LOGISTICA");
+    String urlLogistica = /*"https://logistica-prueba.onrender.com"*/dotenv.get("URL_LOGISTICA");
 
     public void darDeAltaRuta(Long chatId, String mensaje, Comandos comandos) {
 

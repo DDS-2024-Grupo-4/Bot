@@ -17,10 +17,11 @@ import java.util.List;
 public class BotHeladera {
 
   Dotenv dotenv = Dotenv.load();
-  String url = dotenv.get("URL_HELADERA");
+  String url = /*"https://heladeras-prueba.onrender.com"*/ dotenv.get("URL_HELADERA");
 
   public void verIncidentesDeHeladera(Long chatId, String mensaje, Comandos comandos){
-    String heladeraId = String.format("{\"heladeraId\": \"%s\"}", mensaje);
+	  String[] partes = mensaje.split("\\s+");
+	  int heladeraId = Integer.parseInt(partes[0]);
     try {
       String uri = url + "/heladera/" + heladeraId + "/obtenerHistorialIncidentes";
 
@@ -52,13 +53,13 @@ public class BotHeladera {
   public void retirarVianda(Long chatId, String mensaje, Comandos comandos) {
   	String[] partes = mensaje.split("\\s+");
   	
-  	String codigoQR = partes[0];
+  	String qrVianda = partes[0];
   	int heladeraId = Integer.parseInt(partes[1]);
       
       try {
           String requestBody = String.format(
-                  "{\"codigoQR\": \"%s\", \"heladeraId\": %d}",
-                  codigoQR, heladeraId
+                  "{\"qrVianda\": \"%s\", \"heladeraId\": %d}",
+                  qrVianda, heladeraId
           );
 
           HttpRequest request = HttpRequest.newBuilder()
@@ -80,7 +81,7 @@ public class BotHeladera {
           	comandos.sendMessage(chatId, "La heladera no esta habilitada");
               System.out.println("La heladera no esta habilitada: " + response.statusCode() + " - " + response.body());
           	break;
-          case 201:
+          case 200:
           	comandos.sendMessage(chatId, "Se retiro la vianda exitosamente");
               System.out.println("Se retiro la vianda exitosamente: " + response.body());
               break;
@@ -97,7 +98,8 @@ public class BotHeladera {
   }
 
   public void verOcupacion(Long chatId, String mensaje, Comandos comandos){
-    String heladeraId = String.format("{\"heladeraId\": \"%s\"}", mensaje);
+	String[] partes = mensaje.split("\\s+");
+    int heladeraId = Integer.parseInt(partes[0]);
     try {
       String uri = url + "/heladera/" + heladeraId + "/cantidadViandasHastaLLenar";
 
@@ -145,7 +147,8 @@ public class BotHeladera {
   }
 
   public void verRetirosDelDia(Long chatId, String mensaje, Comandos comandos){
-    String heladeraId = String.format("{\"heladeraId\": \"%s\"}", mensaje);
+	  String[] partes = mensaje.split("\\s+");
+	  int heladeraId = Integer.parseInt(partes[0]);
     try {
       String uri = url + "/heladera/" + heladeraId + "/obtenerRetirosDelDia";
 

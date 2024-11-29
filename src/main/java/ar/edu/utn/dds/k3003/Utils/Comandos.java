@@ -58,7 +58,7 @@ public class Comandos extends TelegramLongPollingBot {
                 esperandoUsuarios.put(chatId, "agregarColaborador");
                 sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
                         "`nombre FormaDeColaborar`\n" +
-                        "Ejemplo: `pepito “DONADOR”`");
+                        "Ejemplo: `pepito DONADOR`");
                 break;
 
             case  "/modificarFormaDeColaborar":
@@ -97,20 +97,20 @@ public class Comandos extends TelegramLongPollingBot {
                         "`codigoQR` `heladeraId`\n" +
                         "Ejemplo: `abc` `2`");
                 break;
-            case   "/obtenerHistorialIncidentes":
-                esperandoUsuarios.put(chatId, "obtenerHistorialIncidentes");
+            case   "/verIncidentesDeHeladera":
+                esperandoUsuarios.put(chatId, "verIncidentesDeHeladera");
                 sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
                         "`heladeraId`\n" +
                         "Ejemplo: `2`");
                 break;
-            case   "/viandasEnHeladera":
-                esperandoUsuarios.put(chatId, "viandasEnHeladera");
+            case   "/verOcupacion":
+                esperandoUsuarios.put(chatId, "verOcupacion");
                 sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
                         "`heladeraId`\n" +
                         "Ejemplo: `2`");
                 break;
-            case   "/obtenerRetirosDelDia":
-                esperandoUsuarios.put(chatId, "obtenerRetirosDelDia");
+            case   "/verRetirosDelDia":
+                esperandoUsuarios.put(chatId, "verRetirosDelDia");
                 sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
                         "`heladeraId`\n" +
                         "Ejemplo: `2`");
@@ -157,16 +157,15 @@ public class Comandos extends TelegramLongPollingBot {
                 "/reportarHeladeraRota\n" +
                 "/repararHeladera - reporta que la heladera ha sido reparada\n" +
                 "/verMisPuntos\n" +     //Si me da tiempo agregar forma de ver reparaciones, donaciones de dinero, etc
-                "/suscribirse - Se suscribe a un tipo de evento de heladera" +
-                "VIANDAS:\n\n" +
-                "/crearYDepositarVianda - Crea y Deposita una vianda en una heladera" +
-                "HELADERAS:\n\n" +
-                "/verDatos - Ver mis datos\n" +
-                "/retirarVianda - Retira una vianda de una heladera" +
-                "/verIncidentesDeHeladera - Devuelve el historial de incidentes de una heladera" +
-                "/verOcupacion - Devuelve una lista de las viandas dentro de la heladera" + 
-                "/verRetirosDelDia - Devuelve una lista de las viandas retiradas" +
-                "/eliminarSuscripcion - Elimina la suscripcion de una heladera";
+                "/suscribirse - Se suscribe a un tipo de evento de heladera\n\n" +
+                "VIANDAS:\n" +
+                "/crearYDepositarVianda - Crea y Deposita una vianda en una heladera\n\n" +
+                "HELADERAS:\n" +
+                "/retirarVianda - Retira una vianda de una heladera\n" +
+                "/verIncidentesDeHeladera - Devuelve el historial de incidentes de una heladera\n" +
+                "/verOcupacion - Devuelve una lista de las viandas dentro de la heladera\n" + 
+                "/verRetirosDelDia - Devuelve una lista de las viandas retiradas\n" +
+                "/eliminarSuscripcion - Elimina la suscripcion de una heladera\n";
 
         //aca poner todos los comandos
 
@@ -199,7 +198,7 @@ public class Comandos extends TelegramLongPollingBot {
             	botColaborador.repararHeladera(chatId, message, this);
                 break;
             case "verMisPuntos":
-                botColaborador.Puntos(chatId, message, this);
+                botColaborador.verMisPuntos(chatId, message, this);
                 break;
             case "suscribirse":
             	botColaborador.suscribirse(chatId, message, this);

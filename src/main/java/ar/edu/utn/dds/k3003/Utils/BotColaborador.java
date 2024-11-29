@@ -20,16 +20,16 @@ import java.util.List;
 public class BotColaborador {
 
     Dotenv dotenv = Dotenv.load();
-    String url = dotenv.get("URL_COLABORADOR");
+    String url = /*"https://colaboradores-prueba.onrender.com"*/dotenv.get("URL_COLABORADOR");
     
     public void agregarColaborador(Long chatId, String mensaje, Comandos comandos) {
         String[] partes = mensaje.split("\\s+");
 
-        String nombre  = partes[0];
+        String nombre = partes[0];
         String formas = partes[1];
         try {
-            formas = formas.concat(",").concat(partes[2]);
-            formas = formas.concat(",").concat(partes[3]);
+            formas = formas.concat("\",").concat("\"").concat(partes[2]);
+            formas = formas.concat("\",").concat("\"").concat(partes[3]);
         }
         catch (ArrayIndexOutOfBoundsException e) {
         }
@@ -70,8 +70,8 @@ public class BotColaborador {
         int id = Integer.parseInt(partes[0]);
         String formas = partes[1];
         try {
-            formas = formas.concat(",").concat(partes[2]);
-            formas = formas.concat(",").concat(partes[3]);
+        	formas = formas.concat("\",").concat("\"").concat(partes[2]);
+            formas = formas.concat("\",").concat("\"").concat(partes[3]);
         }
         catch (ArrayIndexOutOfBoundsException e) {
         }
@@ -175,7 +175,7 @@ public class BotColaborador {
         }
     }
 
-    public void Puntos(Long chatId, String mensaje, Comandos comandos) {
+    public void verMisPuntos(Long chatId, String mensaje, Comandos comandos) {
     	String[] partes = mensaje.split("\s+");
 
         int id = Integer.parseInt(partes[0]);
@@ -191,15 +191,9 @@ public class BotColaborador {
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                comandos.sendMessage(chatId, "puntos recuperados exitosamente");
-                System.out.println("Tenés esta cantidad de puntos: " + response.body());
-            } else {
-                comandos.sendMessage(chatId, "Error al buscar puntos");
-                System.out.println("Error al buscar puntos : " + response.statusCode() + " - " + response.body());
-            }
+            HttpResponse<String> response1 = client.send(request, HttpResponse.BodyHandlers.ofString());
+            comandos.sendMessage(chatId, "Tenés esta cantidad de puntos: " + response1.body());
+                System.out.println("Tenés esta cantidad de puntos: " + response1.body());
         } catch (Exception e) {
             e.printStackTrace();
             comandos.sendMessage(chatId, "Ocurrió un error al buscar puntos");
