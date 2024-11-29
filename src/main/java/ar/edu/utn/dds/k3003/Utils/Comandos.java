@@ -52,14 +52,14 @@ public class Comandos extends TelegramLongPollingBot {
                 esperandoUsuarios.put(chatId, "agregarColaborador");
                 sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
                         "`nombre FormaDeColaborar`\n" +
-                        "Ejemplo: `pepito DONADOR`");
+                        "Ejemplo: `pepito “DONADOR”`");
                 break;
 
             case  "/modificarFormaDeColaborar":
                 esperandoUsuarios.put(chatId, "modificarFormaDeColaborar"); // FUNCIONA???
                 sendMessage(chatId, "Por favor, envía los datos en el siguiente formato (puede elegir mas de una):\n" +
-                        "`[formaDeColaborar]`\n" +
-                        "Ejemplo: `DONADOR TRANSPORTADOR TECNICO`");
+                        "`idcolaborador formaDeColaborar`\n" +
+                        "Ejemplo: ` 1 “DONADOR“ “TRANSPORTADOR“ “TECNICO“`");
                 break;
             case  "/reportarHeladeraRota":
                 esperandoUsuarios.put(chatId, "reportarHeladeraRota");
