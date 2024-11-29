@@ -9,10 +9,12 @@ import java.util.Map;
 
 public class Comandos extends TelegramLongPollingBot {
     private BotLogistica botLogistica;
+    private BotHeladera botHeladera;
     private Map<Long, String> esperandoUsuarios = new HashMap<>();
 
     public Comandos() {
         this.botLogistica = new BotLogistica();
+        this.botHeladera = new BotHeladera();
     }
 
     public void handleCommand(Long chatId, String command) {
@@ -79,6 +81,28 @@ public class Comandos extends TelegramLongPollingBot {
                         "`colaboradorID`\n" +
                         "Ejemplo: `1`");
                 break;
+            case
+                    "/verIncidentesDeHeladera":
+                esperandoUsuarios.put(chatId, "verIncidentesDeHeladera");
+                sendMessage(chatId, "Para visualizar el historial de incidentes de una heladera," +
+                    " Por favor, envía los datos en el siguiente formato:\n" +
+                    "`heladeraID`\n" +
+                    "Ejemplo: `1`");
+                break;
+            case
+                "/verOcupacionHeladera":
+                esperandoUsuarios.put(chatId, "verOcupacionHeladera");
+                sendMessage(chatId, "Para visualizar la ocupacion total de una heladera," +
+                    " Por favor, envía los datos en el siguiente formato:\n" +
+                    "`heladeraID`\n" +
+                    "Ejemplo: `1`");
+            case
+                "/verRetirosDelDia":
+                esperandoUsuarios.put(chatId, "verRetirosDelDia");
+                sendMessage(chatId, "Para visualizar los retiros del dia de una heladera," +
+                    " Por favor, envía los datos en el siguiente formato:\n" +
+                    "`heladeraID`\n" +
+                    "Ejemplo: `1`");
             default:
                 sendMessage(chatId, "Comando no reconocido.");
         }
@@ -111,7 +135,10 @@ public class Comandos extends TelegramLongPollingBot {
                 "/verMisPuntos\n" +     //Si me da tiempo agregar forma de ver reparaciones, donaciones de dinero, etc
                 "VIANDAS:\n\n" +
                 "HELADERAS:\n\n" +
-                "/verDatos - Ver mis datos\n";
+                "/verDatos - Ver datos de heladera (not impl)\n" +
+                "/verOcupacionHeladera - Ver ocupacion actual\n" +
+                "/verIncidentesDeHeladera - Ver historial de incidentes\n" +
+                "/verRetirosDelDia - Visualizar historial de retiros del dia\n";
 
         //aca poner todos los comandos
 
@@ -147,7 +174,15 @@ public class Comandos extends TelegramLongPollingBot {
             case "verMisPuntos":
                 botLogistica.Puntos(chatId, message, this);
                 break;
-
+            case "verIncidentesDeHeladera":
+                botHeladera.verIncidentesDeHeladera(chatId, message, this);
+                break;
+            case "verOcupacionHeladera":
+                botHeladera.verOcupacion(chatId, message, this);
+                break;
+            case "verRetirosDelDia":
+                botHeladera.verRetirosDelDia(chatId, message, this);
+                break;
         }
     }
 
