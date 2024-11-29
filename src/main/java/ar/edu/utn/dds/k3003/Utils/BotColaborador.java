@@ -149,7 +149,7 @@ public class BotColaborador {
         String[] partes = mensaje.split("\\s+");
 
         int id = Integer.parseInt(partes[0]);
-        int heladeraid = Integer.parseInt(partes[0]);
+        int heladeraid = Integer.parseInt(partes[1]);
         try {
             String requestBody = "";
             String uri = String.format("/colaboradores/%d/reparar/%d",
