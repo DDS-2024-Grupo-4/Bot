@@ -10,11 +10,15 @@ import java.util.Map;
 public class Comandos extends TelegramLongPollingBot {
     private BotLogistica botLogistica;
     private BotHeladera botHeladera;
+    private BotVianda botViandas;
+    private BotColaborador botColaborador;
     private Map<Long, String> esperandoUsuarios = new HashMap<>();
 
     public Comandos() {
         this.botLogistica = new BotLogistica();
         this.botHeladera = new BotHeladera();
+        this.botViandas = new BotVianda();
+        this.botColaborador = new BotColaborador();
     }
 
     public void handleCommand(Long chatId, String command) {
@@ -159,9 +163,9 @@ public class Comandos extends TelegramLongPollingBot {
                 "HELADERAS:\n\n" +
                 "/verDatos - Ver mis datos\n" +
                 "/retirarVianda - Retira una vianda de una heladera" +
-                "/obtenerHistorialIncidentes - Devuelve el historial de incidentes de una heladera" +
-                "/viandasEnHeladera - Devuelve una lista de las viandas dentro de la heladera" + 
-                "/obtenerRetirosDelDia - Devuelve una lista de las viandas retiradas" +
+                "/verIncidentesDeHeladera - Devuelve el historial de incidentes de una heladera" +
+                "/verOcupacion - Devuelve una lista de las viandas dentro de la heladera" + 
+                "/verRetirosDelDia - Devuelve una lista de las viandas retiradas" +
                 "/eliminarSuscripcion - Elimina la suscripcion de una heladera";
 
         //aca poner todos los comandos
@@ -182,43 +186,43 @@ public class Comandos extends TelegramLongPollingBot {
             case "iniciarFinalizarTraslado":
                botLogistica.iniciarFinalizarTraslado(chatId, message, this);
                 break;
-
             case "agregarColaborador":
-                botLogistica.agregarColaborador(chatId, message, this);
+            	botColaborador.agregarColaborador(chatId, message, this);
                 break;
             case "modificarFormaDeColaborar":
-                botLogistica.modificarFormaDeColaborar(chatId, message, this);
+            	botColaborador.modificarFormaDeColaborar(chatId, message, this);
                 break;
             case "reportarHeladeraRota":
-                botLogistica.reportarHeladera(chatId, message, this);
+            	botColaborador.reportarHeladera(chatId, message, this);
                 break;
             case "repararHeladera":
-                botLogistica.repararHeladera(chatId, message, this);
+            	botColaborador.repararHeladera(chatId, message, this);
                 break;
             case "verMisPuntos":
-                botLogistica.Puntos(chatId, message, this);
-                break;
-            case "crearYDepositarVianda":
-                botLogistica.crearYDepositarVianda(chatId, message, this);
-                break;
-            case "retirarVianda":
-                botLogistica.retirarVianda(chatId, message, this);
-                break;
-            case "obtenerHistorialIncidentes":
-                botLogistica.obtenerHistorialIncidentes(chatId, message, this);
-                break;
-            case "viandasEnHeladera":
-                botLogistica.viandasEnHeladera(chatId, message, this);
-                break;
-            case "obtenerRetirosDelDia":
-                botLogistica.obtenerRetirosDelDia(chatId, message, this);
-                break;
-            case "eliminarSuscripcion":
-                botLogistica.eliminarSuscripcion(chatId, message, this);
+                botColaborador.Puntos(chatId, message, this);
                 break;
             case "suscribirse":
-                botLogistica.suscribirse(chatId, message, this);
+            	botColaborador.suscribirse(chatId, message, this);
                 break;
+            case "crearYDepositarVianda":
+                botViandas.crearYDepositarVianda(chatId, message, this);
+                break;
+            case "retirarVianda":
+            	botHeladera.retirarVianda(chatId, message, this);
+                break;
+            case "verIncidentesDeHeladera":
+            	botHeladera.verIncidentesDeHeladera(chatId, message, this);
+                break;
+            case "verOcupacion":
+            	botHeladera.verOcupacion(chatId, message, this);
+                break;
+            case "verRetirosDelDia":
+            	botHeladera.verRetirosDelDia(chatId, message, this);
+                break;
+            case "eliminarSuscripcion":
+            	botHeladera.eliminarSuscripcion(chatId, message, this);
+                break;
+            
         }
     }
 

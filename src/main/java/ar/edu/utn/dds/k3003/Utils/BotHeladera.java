@@ -19,44 +19,6 @@ public class BotHeladera {
   Dotenv dotenv = Dotenv.load();
   String url = dotenv.get("URL_HELADERA");
 
-  public void darDeAltaRuta(Long chatId, String mensaje, Comandos comandos) {
-
-    String[] partes = mensaje.split("\\s+");
-
-    int colaboradorId = Integer.parseInt(partes[0]);
-    int heladeraIdOrigen = Integer.parseInt(partes[1]);
-    int heladeraIdDestino = Integer.parseInt(partes[2]);
-
-    try {
-      String requestBody = String.format(
-          "{\"colaboradorId\": %d, \"heladeraIdOrigen\": %d, \"heladeraIdDestino\": %d}",
-          colaboradorId, heladeraIdOrigen, heladeraIdDestino
-      );
-
-      HttpRequest request = HttpRequest.newBuilder()
-          .uri(URI.create(url + "/rutas"))
-          .header("Content-Type", "application/json")
-          .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-          .build();
-
-      HttpClient client = HttpClient.newHttpClient();
-
-      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-      if (response.statusCode() == 201) {
-        comandos.sendMessage(chatId, "Ruta creada exitosamente");
-        System.out.println("Ruta creada exitosamente: " + response.body());
-      } else {
-        comandos.sendMessage(chatId,"Error al crear la ruta");
-        System.out.println("Error al crear la ruta: " + response.statusCode() + " - " + response.body());
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      comandos.sendMessage(chatId,"Ocurrió un error al crear la ruta");
-      System.out.println("Ocurrió un error al crear la ruta: " + e.getMessage());
-    }
-  }
-
   public void verIncidentesDeHeladera(Long chatId, String mensaje, Comandos comandos){
     String heladeraId = String.format("{\"heladeraId\": \"%s\"}", mensaje);
     try {
@@ -85,6 +47,53 @@ public class BotHeladera {
       comandos.sendMessage(chatId, "Ocurrió un error al obtener el historial de incidentes");
       System.out.println("Ocurrió un error al obtener el historial de incidentes: " + e.getMessage());
     }
+  }
+  
+  public void retirarVianda(Long chatId, String mensaje, Comandos comandos) {
+  	String[] partes = mensaje.split("\\s+");
+  	
+  	String codigoQR = partes[0];
+  	int heladeraId = Integer.parseInt(partes[1]);
+      
+      try {
+          String requestBody = String.format(
+                  "{\"codigoQR\": \"%s\", \"heladeraId\": %d}",
+                  codigoQR, heladeraId
+          );
+
+          HttpRequest request = HttpRequest.newBuilder()
+                  .uri(URI.create(url + "/retiros"))
+                  .header("Content-Type", "application/json")
+                  .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                  .build();
+
+          HttpClient client = HttpClient.newHttpClient();
+
+          HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+          
+          switch(response.statusCode()) {
+          case 404:
+          	comandos.sendMessage(chatId, "No se encontro la heladera");
+              System.out.println("No se encontro la heladera: " + response.statusCode() + " - " + response.body());
+          	break;
+          case 403:
+          	comandos.sendMessage(chatId, "La heladera no esta habilitada");
+              System.out.println("La heladera no esta habilitada: " + response.statusCode() + " - " + response.body());
+          	break;
+          case 201:
+          	comandos.sendMessage(chatId, "Se retiro la vianda exitosamente");
+              System.out.println("Se retiro la vianda exitosamente: " + response.body());
+              break;
+          default:
+          	comandos.sendMessage(chatId, "Hubo un error en la solicitud");
+              System.out.println("Hubo un error en la solicitud: " + response.statusCode() + " - " + response.body());
+          	break;
+          }
+      } catch (Exception e) {
+          e.printStackTrace();
+          comandos.sendMessage(chatId,"Ocurrió un error al retirar la vianda");
+          System.out.println("Ocurrió un error al retirar la vianda: " + e.getMessage());
+      }
   }
 
   public void verOcupacion(Long chatId, String mensaje, Comandos comandos){
@@ -204,6 +213,57 @@ public class BotHeladera {
       e.printStackTrace();
       return null;
     }
+  }
+  
+  public void eliminarSuscripcion(Long chatId, String mensaje, Comandos comandos) {
+  	String[] partes = mensaje.split("\\s+");
+  	
+  	String tipoDeSuscripcion = partes[0];
+  	int heladeraId = Integer.parseInt(partes[1]);
+  	int colaboradorId = Integer.parseInt(partes[2]);
+      
+      try {
+          String uri = String.format("/%d/suscripciones",
+          		heladeraId
+          );
+          String requestBody = String.format(
+                  "{\"codigoQR\": \"%s\", \"heladeraId\": %d, \"colaboradorId\": %d}",
+                  tipoDeSuscripcion, heladeraId, colaboradorId
+          );
+
+          HttpRequest request = HttpRequest.newBuilder()
+                  .uri(URI.create(url + uri))
+                  .header("Content-Type", "application/json")
+                  .method("DELETE", HttpRequest.BodyPublishers.ofString(requestBody))
+                  .build();
+
+          HttpClient client = HttpClient.newHttpClient();
+
+          HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+          
+          switch(response.statusCode()) {
+          case 404:
+          	comandos.sendMessage(chatId, "No se encontro la heladera");
+              System.out.println("No se encontro la heladera: " + response.statusCode() + " - " + response.body());
+          	break;
+          case 400:
+          	comandos.sendMessage(chatId, "El tipo de suscripcion es invalido o falta tipo de suscripcion, id de heladera o id del colaborador");
+              System.out.println("El tipo de suscripcion es invalido o falta tipo de suscripcion, id de heladera o id del colaborador: " + response.statusCode() + " - " + response.body());
+          	break;
+          case 201:
+          	comandos.sendMessage(chatId, "Se elimino excitosamente la suscripcion");
+              System.out.println("Se elimino excitosamente la suscripcion: " + response.body());
+              break;
+          default:
+          	comandos.sendMessage(chatId, "Hubo un error en la solicitud");
+              System.out.println("Hubo un error en la solicitud: " + response.statusCode() + " - " + response.body());
+          	break;
+          }
+      } catch (Exception e) {
+          e.printStackTrace();
+          comandos.sendMessage(chatId,"Ocurrió un error al intentar de desuscribirse");
+          System.out.println("Ocurrió un error al intentar de desuscribirse: " + e.getMessage());
+      }
   }
 }
 
