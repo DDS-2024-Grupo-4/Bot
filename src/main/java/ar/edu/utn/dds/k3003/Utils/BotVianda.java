@@ -27,13 +27,13 @@ public class BotVianda {
     	
     	String codigoQR = partes[0];
     	String fechaElaboracion = partes[1];
-    	int idColaborador = Integer.parseInt(partes[2]);
+    	int colaboradorId = Integer.parseInt(partes[2]);
         int heladeraId = Integer.parseInt(partes[3]);
         
         try {
             String requestBody = String.format(
-                    "{\"codigoQR\": \"%s\", \"fechaElaboracion\": \"%s\", \"idColaborador\": %d, \"heladeraId\": %d}",
-                    codigoQR, fechaElaboracion, idColaborador, heladeraId
+                    "{\"codigoQR\": \"%s\", \"fechaElaboracion\": \"%s\", \"colaboradorId\": %d, \"heladeraId\": %d}",
+                    codigoQR, fechaElaboracion, colaboradorId, heladeraId
             );
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -50,8 +50,8 @@ public class BotVianda {
                 comandos.sendMessage(chatId, "Vianda creada y depositada exitosamente");
                 System.out.println("Vianda creada y depositada exitosamente: " + response.body());
             } else {
-                comandos.sendMessage(chatId,"Error al crear o depositar la ruta");
-                System.out.println("Error al crear o depositar la ruta: " + response.statusCode() + " - " + response.body());
+                comandos.sendMessage(chatId,"Error al crear o depositar la Vianda");
+                System.out.println("Error al crear o depositar la Vianda: " + response.statusCode() + " - " + response.body());
             }
         } catch (Exception e) {
             e.printStackTrace();
