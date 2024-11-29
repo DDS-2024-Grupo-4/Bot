@@ -60,17 +60,6 @@ public class BotVianda {
         }
     }
     
-    public static List<Integer> parseViandasInfo(String responseBody) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-          // Convertimos la respuesta en una lista de enteros
-          return objectMapper.readValue(responseBody, List.class);
-        } catch (IOException e) {
-          e.printStackTrace();
-          return null;
-        }
-      }
-    
 }
 
 
