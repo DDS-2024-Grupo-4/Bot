@@ -13,7 +13,7 @@ RUN mvn clean package assembly:single -DskipTests
 
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY --from=build /target/Bot.jar Metrics.jar
+COPY --from=build /target/Bot.jar Bot.jar
 
 EXPOSE 8080
 
