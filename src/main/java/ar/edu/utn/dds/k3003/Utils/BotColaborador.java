@@ -38,7 +38,7 @@ public class BotColaborador {
 
         try {
             String requestBody = String.format(
-                    "{\"nombre\": %s, \"formas\": [%s]}",
+                    "{\"nombre\": \"%s\", \"formas\": [%s]}",
                     nombre,formas
             );
 
