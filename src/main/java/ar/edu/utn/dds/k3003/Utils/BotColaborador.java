@@ -27,8 +27,6 @@ public class BotColaborador {
 
         String nombre  = partes[0];
         String formas = partes[1];
-        String forma2="";
-        String forma3="";
         try {
             formas = formas.concat(",").concat(partes[2]);
             formas = formas.concat(",").concat(partes[3]);
@@ -38,7 +36,7 @@ public class BotColaborador {
 
         try {
             String requestBody = String.format(
-                    "{\"nombre\": \"%s\", \"formas\": [%s]}",
+                    "{\"nombre\": \"%s\", \"formas\": [\"%s\"]}",
                     nombre,formas
             );
 
@@ -71,8 +69,6 @@ public class BotColaborador {
 
         int id = Integer.parseInt(partes[0]);
         String formas = partes[1];
-        String forma2="";
-        String forma3="";
         try {
             formas = formas.concat(",").concat(partes[2]);
             formas = formas.concat(",").concat(partes[3]);
@@ -82,7 +78,7 @@ public class BotColaborador {
 
         try {
             String requestBody = String.format(
-                    "{\"formas\": [%s]}",
+                    "{\"formas\": [\"%s\"]}",
                     formas
             );
             String uri = String.format("/colaboradores/%d",
@@ -184,14 +180,13 @@ public class BotColaborador {
 
         int id = Integer.parseInt(partes[0]);
         try {
-            String requestBody = "";
             String uri = String.format("/colaboradores/%d/puntos",
                     id
             );
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url + uri))
                     .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .GET()
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
@@ -225,7 +220,7 @@ public class BotColaborador {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url + "/suscribirse"))
                     .header("Content-Type", "application/json")
-                    .method("POST", HttpRequest.BodyPublishers.ofString(requestBody))
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
