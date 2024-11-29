@@ -193,7 +193,13 @@ public class BotColaborador {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+            if (response.statusCode() == 200) {
+                comandos.sendMessage(chatId, "puntos recuperados exitosamente");
                 System.out.println("Tenés esta cantidad de puntos: " + response.body());
+            } else {
+                comandos.sendMessage(chatId, "Error al buscar puntos");
+                System.out.println("Error al buscar puntos : " + response.statusCode() + " - " + response.body());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             comandos.sendMessage(chatId, "Ocurrió un error al buscar puntos");
