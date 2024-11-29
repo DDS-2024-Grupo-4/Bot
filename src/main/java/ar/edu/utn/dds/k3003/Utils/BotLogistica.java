@@ -15,8 +15,10 @@ import java.util.List;
 public class BotLogistica {
 
     Dotenv dotenv = Dotenv.load();
-    String url = dotenv.get("URL_LOGISTICA");
+    String urlLogistica = dotenv.get("URL_LOGISTICA");
     String urlColaboradores = dotenv.get("URL_COLABORADORES");
+    String urlViandas = dotenv.get("URL_VIANDA");
+    String urlHeladera = dotenv.get("URL_HELADERA");
 
     public void darDeAltaRuta(Long chatId, String mensaje, Comandos comandos) {
 
@@ -33,7 +35,7 @@ public class BotLogistica {
             );
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url + "/rutas"))
+                    .uri(URI.create(urlLogistica + "/rutas"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
@@ -73,7 +75,7 @@ public class BotLogistica {
             );
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url + "/traslados"))
+                    .uri(URI.create(urlLogistica + "/traslados"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
@@ -111,7 +113,7 @@ public class BotLogistica {
             );
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url + "/traslados/" + idTraslado))
+                    .uri(URI.create(urlLogistica + "/traslados/" + idTraslado))
                     .header("Content-Type", "application/json")
                     .method("PATCH", HttpRequest.BodyPublishers.ofString(requestBody)) // Método PATCH
                     .build();
@@ -293,6 +295,354 @@ public class BotLogistica {
     }
 
     public void Puntos(Long chatId, String mensaje, Comandos comandos) {
+    	String[] partes = mensaje.split("\s+");
+
+        int id = Integer.parseInt(partes[0]);
+        try {
+            String requestBody = "";
+            String url = String.format("/colaboradores/%d/puntos",
+                    id
+            );
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(urlColaboradores + url))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 201) {
+                comandos.sendMessage(chatId, "puntos recuperados exitosamente");
+                System.out.println("Tenés esta cantidad de puntos: " + response.body());
+            } else {
+                comandos.sendMessage(chatId, "Error al buscar puntos");
+                System.out.println("Error al buscar puntos: " + response.statusCode() + " - " + response.body());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            comandos.sendMessage(chatId, "Ocurrió un error al buscar puntos");
+            System.out.println("Ocurrió un error al buscar puntos: " + e.getMessage());
+        }
+
+    }
+    
+    public void crearYDepositarVianda(Long chatId, String mensaje, Comandos comandos) {
+    	String[] partes = mensaje.split("\\s+");
+    	
+    	String codigoQR = partes[0];
+    	String fechaElaboracion = partes[1];
+    	int idColaborador = Integer.parseInt(partes[2]);
+        int heladeraId = Integer.parseInt(partes[3]);
+        
+        try {
+            String requestBody = String.format(
+                    "{\"codigoQR\": \"%s\", \"fechaElaboracion\": \"%s\", \"idColaborador\": %d, \"heladeraId\": %d}",
+                    codigoQR, fechaElaboracion, idColaborador, heladeraId
+            );
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(urlViandas + "/viandasDepositar"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 201) {
+                comandos.sendMessage(chatId, "Vianda creada y depositada exitosamente");
+                System.out.println("Vianda creada y depositada exitosamente: " + response.body());
+            } else {
+                comandos.sendMessage(chatId,"Error al crear o depositar la ruta");
+                System.out.println("Error al crear o depositar la ruta: " + response.statusCode() + " - " + response.body());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            comandos.sendMessage(chatId,"Ocurrió un error al crear y depositar la vianda");
+            System.out.println("Ocurrió un error al crear y depositar la vianda: " + e.getMessage());
+        }
+    }
+    
+    public void retirarVianda(Long chatId, String mensaje, Comandos comandos) {
+    	String[] partes = mensaje.split("\\s+");
+    	
+    	String codigoQR = partes[0];
+    	int heladeraId = Integer.parseInt(partes[1]);
+        
+        try {
+            String requestBody = String.format(
+                    "{\"codigoQR\": \"%s\", \"heladeraId\": %d}",
+                    codigoQR, heladeraId
+            );
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(urlHeladera + "/retiros"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            
+            switch(response.statusCode()) {
+            case 404:
+            	comandos.sendMessage(chatId, "No se encontro la heladera");
+                System.out.println("No se encontro la heladera: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 403:
+            	comandos.sendMessage(chatId, "La heladera no esta habilitada");
+                System.out.println("La heladera no esta habilitada: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 201:
+            	comandos.sendMessage(chatId, "Se retiro la vianda exitosamente");
+                System.out.println("Se retiro la vianda exitosamente: " + response.body());
+                break;
+            default:
+            	comandos.sendMessage(chatId, "Hubo un error en la solicitud");
+                System.out.println("Hubo un error en la solicitud: " + response.statusCode() + " - " + response.body());
+            	break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            comandos.sendMessage(chatId,"Ocurrió un error al retirar la vianda");
+            System.out.println("Ocurrió un error al retirar la vianda: " + e.getMessage());
+        }
+    }
+    
+    public void obtenerHistorialIncidentes(Long chatId, String mensaje, Comandos comandos) {
+    	String[] partes = mensaje.split("\\s+");
+    	
+    	int heladeraId = Integer.parseInt(partes[0]);
+        
+        try {
+            String url = String.format("/heladera/%d/obtenerHistorialIncidentes",
+            		heladeraId
+            );
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(urlHeladera + url))
+                    .header("Content-Type", "application/json")
+                    .GET()
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            
+            switch(response.statusCode()) {
+            case 404:
+            	comandos.sendMessage(chatId, "La heladera no tiene un historial");
+                System.out.println("La heladera no tiene un historial: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 400:
+            	comandos.sendMessage(chatId, "La heladera no fue encontrada");
+                System.out.println("La heladera no fue encontrada: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 201:
+            	comandos.sendMessage(chatId, "Se encontro el historial de la heladera");
+                System.out.println("Se encontro el historial de la heladera: " + response.body());
+                break;
+            default:
+            	comandos.sendMessage(chatId, "Hubo un error en la solicitud");
+                System.out.println("Hubo un error en la solicitud: " + response.statusCode() + " - " + response.body());
+            	break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            comandos.sendMessage(chatId,"Ocurrió un error al intentar de conseguir el historial de la heladera");
+            System.out.println("Ocurrió un error al intentar de conseguir el historial de la heladera: " + e.getMessage());
+        }
+    }
+    
+    public void viandasEnHeladera(Long chatId, String mensaje, Comandos comandos) {
+    	String[] partes = mensaje.split("\\s+");
+    	
+    	int heladeraId = Integer.parseInt(partes[0]);
+        
+        try {
+            String url = String.format("/heladeras/%d/viandasEnHeladera",
+            		heladeraId
+            );
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(urlHeladera + url))
+                    .header("Content-Type", "application/json")
+                    .GET()
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            
+            switch(response.statusCode()) {
+            case 404:
+            	comandos.sendMessage(chatId, "La heladera no tiene viandas");
+                System.out.println("La heladera no tiene viandas: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 400:
+            	comandos.sendMessage(chatId, "La heladera no fue encontrada");
+                System.out.println("La heladera no fue encontrada: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 201:
+            	comandos.sendMessage(chatId, "Se encontraron las viandas en la heladera");
+                System.out.println("Se encontraron las viandas en la heladera: " + response.body());
+                break;
+            default:
+            	comandos.sendMessage(chatId, "Hubo un error en la solicitud");
+                System.out.println("Hubo un error en la solicitud: " + response.statusCode() + " - " + response.body());
+            	break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            comandos.sendMessage(chatId,"Ocurrió un error al intentar de conseguir las viandas de la heladera");
+            System.out.println("Ocurrió un error al intentar de conseguir las viandas de la heladera: " + e.getMessage());
+        }
+    }
+    
+    public void obtenerRetirosDelDia(Long chatId, String mensaje, Comandos comandos) {
+    	String[] partes = mensaje.split("\\s+");
+    	
+    	int heladeraId = Integer.parseInt(partes[0]);
+        
+        try {
+            String url = String.format("/heladera/%d/obtenerRetirosDelDia",
+            		heladeraId
+            );
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(urlHeladera + url))
+                    .header("Content-Type", "application/json")
+                    .GET()
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            
+            switch(response.statusCode()) {
+            case 404:
+            	comandos.sendMessage(chatId, "No hubo retiros en la heladera el dia de hoy");
+                System.out.println("No hubo retiros en la heladera el dia de hoy: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 400:
+            	comandos.sendMessage(chatId, "La heladera no fue encontrada");
+                System.out.println("La heladera no fue encontrada: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 201:
+            	comandos.sendMessage(chatId, "Se obtuvieron los retiros del dia");
+                System.out.println("Se obtuvieron los retiros del dia: " + response.body());
+                break;
+            default:
+            	comandos.sendMessage(chatId, "Hubo un error en la solicitud");
+                System.out.println("Hubo un error en la solicitud: " + response.statusCode() + " - " + response.body());
+            	break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            comandos.sendMessage(chatId,"Ocurrió un error al intentar de conseguir los retiros del dia");
+            System.out.println("Ocurrió un error al intentar de conseguir los retiros del dia: " + e.getMessage());
+        }
+    }
+    
+    public void eliminarSuscripcion(Long chatId, String mensaje, Comandos comandos) {
+    	String[] partes = mensaje.split("\\s+");
+    	
+    	String tipoDeSuscripcion = partes[0];
+    	int heladeraId = Integer.parseInt(partes[1]);
+    	int colaboradorId = Integer.parseInt(partes[2]);
+        
+        try {
+            String url = String.format("/%d/suscripciones",
+            		heladeraId
+            );
+            String requestBody = String.format(
+                    "{\"codigoQR\": \"%s\", \"heladeraId\": %d, \"colaboradorId\": %d}",
+                    tipoDeSuscripcion, heladeraId, colaboradorId
+            );
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(urlHeladera + url))
+                    .header("Content-Type", "application/json")
+                    .method("DELETE", HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            
+            switch(response.statusCode()) {
+            case 404:
+            	comandos.sendMessage(chatId, "No se encontro la heladera");
+                System.out.println("No se encontro la heladera: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 400:
+            	comandos.sendMessage(chatId, "El tipo de suscripcion es invalido o falta tipo de suscripcion, id de heladera o id del colaborador");
+                System.out.println("El tipo de suscripcion es invalido o falta tipo de suscripcion, id de heladera o id del colaborador: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 201:
+            	comandos.sendMessage(chatId, "Se elimino excitosamente la suscripcion");
+                System.out.println("Se elimino excitosamente la suscripcion: " + response.body());
+                break;
+            default:
+            	comandos.sendMessage(chatId, "Hubo un error en la solicitud");
+                System.out.println("Hubo un error en la solicitud: " + response.statusCode() + " - " + response.body());
+            	break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            comandos.sendMessage(chatId,"Ocurrió un error al intentar de desuscribirse");
+            System.out.println("Ocurrió un error al intentar de desuscribirse: " + e.getMessage());
+        }
+    }
+    
+    public void suscribirse(Long chatId, String mensaje, Comandos comandos) {
+    	String[] partes = mensaje.split("\\s+");
+
+    	int colaboradorId = Integer.parseInt(partes[0]);
+    	int heladeraId = Integer.parseInt(partes[1]);
+    	String tipoSuscripcion = partes[2];
+    	int cantidadFaltante = Integer.parseInt(partes[3]);
+    	int cantidadDisponible = Integer.parseInt(partes[4]);
+        
+        try {
+            String requestBody = String.format(
+                    "{\"colaboradorId\": %d, \"heladeraId\": %d, \"tipoSuscripcion\": \"%s\", \"cantidadFaltante\": %d, \"cantidadDisponible\": %d}",
+                    colaboradorId, heladeraId, tipoSuscripcion, cantidadFaltante, cantidadDisponible
+            );
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(urlHeladera + "/suscribirse"))
+                    .header("Content-Type", "application/json")
+                    .method("POST", HttpRequest.BodyPublishers.ofString(requestBody))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            
+            switch(response.statusCode()) {
+            case 404:
+            	comandos.sendMessage(chatId, "No se encontro la heladera");
+                System.out.println("No se encontro la heladera: " + response.statusCode() + " - " + response.body());
+            	break;
+            case 201:
+            	comandos.sendMessage(chatId, "Se logro la suscripcion excitosamente");
+                System.out.println("Se logro la suscripcion excitosamente: " + response.body());
+                break;
+            default:
+            	comandos.sendMessage(chatId, "Hubo un error en la solicitud");
+                System.out.println("Hubo un error en la solicitud: " + response.statusCode() + " - " + response.body());
+            	break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            comandos.sendMessage(chatId,"Ocurrió un error al intentar de suscribirse");
+            System.out.println("Ocurrió un error al intentar de suscribirse: " + e.getMessage());
+        }
     }
 }
 

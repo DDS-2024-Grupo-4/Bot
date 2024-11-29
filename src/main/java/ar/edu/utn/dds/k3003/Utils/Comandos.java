@@ -81,28 +81,48 @@ public class Comandos extends TelegramLongPollingBot {
                         "`colaboradorID`\n" +
                         "Ejemplo: `1`");
                 break;
-            case
-                    "/verIncidentesDeHeladera":
-                esperandoUsuarios.put(chatId, "verIncidentesDeHeladera");
-                sendMessage(chatId, "Para visualizar el historial de incidentes de una heladera," +
-                    " Por favor, envía los datos en el siguiente formato:\n" +
-                    "`heladeraID`\n" +
-                    "Ejemplo: `1`");
+            case   "/crearYDepositarVianda":
+                esperandoUsuarios.put(chatId, "crearYDepositarVianda");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`codigoQR` `fechaElaboracion` `idColaborador` `heladeraId`\n" +
+                        "Ejemplo: `abc` `2024-05-09T10:30:00Z` `1` `2`");
                 break;
-            case
-                "/verOcupacionHeladera":
-                esperandoUsuarios.put(chatId, "verOcupacionHeladera");
-                sendMessage(chatId, "Para visualizar la ocupacion total de una heladera," +
-                    " Por favor, envía los datos en el siguiente formato:\n" +
-                    "`heladeraID`\n" +
-                    "Ejemplo: `1`");
-            case
-                "/verRetirosDelDia":
-                esperandoUsuarios.put(chatId, "verRetirosDelDia");
-                sendMessage(chatId, "Para visualizar los retiros del dia de una heladera," +
-                    " Por favor, envía los datos en el siguiente formato:\n" +
-                    "`heladeraID`\n" +
-                    "Ejemplo: `1`");
+            case   "/retirarVianda":
+                esperandoUsuarios.put(chatId, "retirarVianda");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`codigoQR` `heladeraId`\n" +
+                        "Ejemplo: `abc` `2`");
+                break;
+            case   "/obtenerHistorialIncidentes":
+                esperandoUsuarios.put(chatId, "obtenerHistorialIncidentes");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`heladeraId`\n" +
+                        "Ejemplo: `2`");
+                break;
+            case   "/viandasEnHeladera":
+                esperandoUsuarios.put(chatId, "viandasEnHeladera");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`heladeraId`\n" +
+                        "Ejemplo: `2`");
+                break;
+            case   "/obtenerRetirosDelDia":
+                esperandoUsuarios.put(chatId, "obtenerRetirosDelDia");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`heladeraId`\n" +
+                        "Ejemplo: `2`");
+                break;
+            case   "/eliminarSuscripcion":
+                esperandoUsuarios.put(chatId, "eliminarSuscripcion");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`tipoDeSuscripcion` `heladeraId` `colaboradorId`\n" +
+                        "Ejemplo: `“ViandasDisponibles“ “FaltanteViandas“ “HeladeraDesperfecto“` `2` `1`");
+                break;
+            case   "/suscribirse":
+                esperandoUsuarios.put(chatId, "suscribirse");
+                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
+                        "`colaboradorId` `heladeraId` `tipoDeSuscripcion` `cantidadFaltante` `cantidadDisponible`\n" +
+                        "Ejemplo: `1` `2` `“ViandasDisponibles“ “FaltanteViandas“ “HeladeraDesperfecto“` `2` `2`");
+                break;
             default:
                 sendMessage(chatId, "Comando no reconocido.");
         }
@@ -122,7 +142,7 @@ public class Comandos extends TelegramLongPollingBot {
 
     public void showMenu(Long chatId) {
         String menuText = "Elige una opción:\n\n" +
-                "LOGISTICA:\n" +
+        		"LOGISTICA:\n" +
                 "/darDeAltaRuta - Crear ruta\n" +
                 "/asignarTraslado - asigna un traslado a un colaborador\n" +
                 "/iniciarTraslado - inicia un traslado de una vianda\n" +
@@ -133,12 +153,16 @@ public class Comandos extends TelegramLongPollingBot {
                 "/reportarHeladeraRota\n" +
                 "/repararHeladera - reporta que la heladera ha sido reparada\n" +
                 "/verMisPuntos\n" +     //Si me da tiempo agregar forma de ver reparaciones, donaciones de dinero, etc
+                "/suscribirse - Se suscribe a un tipo de evento de heladera" +
                 "VIANDAS:\n\n" +
+                "/crearYDepositarVianda - Crea y Deposita una vianda en una heladera" +
                 "HELADERAS:\n\n" +
-                "/verDatos - Ver datos de heladera (not impl)\n" +
-                "/verOcupacionHeladera - Ver ocupacion actual\n" +
-                "/verIncidentesDeHeladera - Ver historial de incidentes\n" +
-                "/verRetirosDelDia - Visualizar historial de retiros del dia\n";
+                "/verDatos - Ver mis datos\n" +
+                "/retirarVianda - Retira una vianda de una heladera" +
+                "/obtenerHistorialIncidentes - Devuelve el historial de incidentes de una heladera" +
+                "/viandasEnHeladera - Devuelve una lista de las viandas dentro de la heladera" + 
+                "/obtenerRetirosDelDia - Devuelve una lista de las viandas retiradas" +
+                "/eliminarSuscripcion - Elimina la suscripcion de una heladera";
 
         //aca poner todos los comandos
 
@@ -174,14 +198,26 @@ public class Comandos extends TelegramLongPollingBot {
             case "verMisPuntos":
                 botLogistica.Puntos(chatId, message, this);
                 break;
-            case "verIncidentesDeHeladera":
-                botHeladera.verIncidentesDeHeladera(chatId, message, this);
+            case "crearYDepositarVianda":
+                botLogistica.crearYDepositarVianda(chatId, message, this);
                 break;
-            case "verOcupacionHeladera":
-                botHeladera.verOcupacion(chatId, message, this);
+            case "retirarVianda":
+                botLogistica.retirarVianda(chatId, message, this);
                 break;
-            case "verRetirosDelDia":
-                botHeladera.verRetirosDelDia(chatId, message, this);
+            case "obtenerHistorialIncidentes":
+                botLogistica.obtenerHistorialIncidentes(chatId, message, this);
+                break;
+            case "viandasEnHeladera":
+                botLogistica.viandasEnHeladera(chatId, message, this);
+                break;
+            case "obtenerRetirosDelDia":
+                botLogistica.obtenerRetirosDelDia(chatId, message, this);
+                break;
+            case "eliminarSuscripcion":
+                botLogistica.eliminarSuscripcion(chatId, message, this);
+                break;
+            case "suscribirse":
+                botLogistica.suscribirse(chatId, message, this);
                 break;
         }
     }
