@@ -21,6 +21,7 @@ public class BotApp extends TelegramLongPollingBot  {
 
         try {
             telegramBotsApi.registerBot(new BotApp());
+            System.out.println("ya esta corriendo");
         } catch (Exception e) {
             e.printStackTrace();
         }

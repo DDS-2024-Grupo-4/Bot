@@ -13,8 +13,8 @@ RUN mvn clean package assembly:single -DskipTests
 
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY --from=build /target/Metrics.jar Metrics.jar
+COPY --from=build /target/Bot.jar Bot.jar
 
 EXPOSE 8080
 
-CMD ["java","-classpath","Metrics.jar","ar.edu.utn.dds.k3003.app.BotApp"]
+CMD ["java","-classpath","Bot.jar","ar.edu.utn.dds.k3003.app.BotApp"]
