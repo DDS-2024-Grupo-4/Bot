@@ -98,7 +98,7 @@ public class BotColaborador {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 201) {
+            if (response.statusCode() == 200) {
                 comandos.sendMessage(chatId, "Forma cambiada exitosamente");
                 System.out.println("Forma cambiada exitosamente: " + response.body());
             } else {
@@ -131,7 +131,7 @@ public class BotColaborador {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 201) {
+            if (response.statusCode() == 200) {
                 comandos.sendMessage(chatId, "Forma cambiada exitosamente");
                 System.out.println("Forma cambiada exitosamente: " + response.body());
             } else {
@@ -165,7 +165,7 @@ public class BotColaborador {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 201) {
+            if (response.statusCode() == 200) {
                 comandos.sendMessage(chatId, "Heladera reparada exitosamente");
                 System.out.println("Heladera reparada exitosamente: " + response.body());
             } else {
@@ -198,7 +198,7 @@ public class BotColaborador {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 201) {
+            if (response.statusCode() == 200) {
                 comandos.sendMessage(chatId, "puntos recuperados exitosamente");
                 System.out.println("Tenés esta cantidad de puntos: " + response.body());
             } else {
