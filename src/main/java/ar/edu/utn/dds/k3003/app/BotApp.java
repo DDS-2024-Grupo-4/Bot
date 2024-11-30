@@ -3,6 +3,9 @@ package ar.edu.utn.dds.k3003.app;
 import ar.edu.utn.dds.k3003.Utils.Comandos;
 import io.github.cdimascio.dotenv.Dotenv;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -29,6 +32,18 @@ public class BotApp extends TelegramLongPollingBot  {
 
     public BotApp() {
         this.commandsHandler = new Comandos();
+    }
+    
+    public class ChatIdRegistry {
+    	private static Map<Integer, Long> chatIds = new HashMap<>();
+    	
+    	public static void registrarChatId(int colaboradorId, Long chatId) {
+    		chatIds.put(colaboradorId, chatId);
+    	}
+    	
+    	public static Long obtenerChatId(int colaboradorId) {
+    		return chatIds.get(colaboradorId);
+    	}
     }
 
     @Override

@@ -4,6 +4,8 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import ar.edu.utn.dds.k3003.app.BotApp.ChatIdRegistry;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,6 +15,7 @@ public class Comandos extends TelegramLongPollingBot {
     private BotVianda botViandas;
     private BotColaborador botColaborador;
     private Map<Long, String> esperandoUsuarios = new HashMap<>();
+    private int idColaboradorActual;
 
     public Comandos() {
         this.botLogistica = new BotLogistica();
@@ -24,7 +27,8 @@ public class Comandos extends TelegramLongPollingBot {
     public void handleCommand(Long chatId, String command) {
         switch (command) {
             case "/start":
-                sendMessage(chatId, "¡Hola! Soy tu bot. usa el comando /menu para ver las funcionalidades");
+            	esperandoUsuarios.put(chatId, "obtenerColaboradorId");
+                sendMessage(chatId, "¡Hola! Soy tu bot. Por favor escribe tu numero de colaboradorId.");
                 break;
             case "/menu":
                 showMenu(chatId);
@@ -171,11 +175,21 @@ public class Comandos extends TelegramLongPollingBot {
 
         sendMessage(chatId, menuText);
     }
+    
+    public void obtenerColaboradorId(Long chatId, String mensaje, Comandos comandos) {
+    	idColaboradorActual = Integer.parseInt(mensaje);
+    	ChatIdRegistry.registrarChatId(idColaboradorActual, chatId);
+    	comandos.sendMessage(chatId, "Bienvenido colaborador nro " + idColaboradorActual + ".  Use el comando /menu para ver las funcionalidades.");
+        System.out.println("Colaborador nro " + idColaboradorActual + " entro al bot");
+    }
 
     public void onMessageReceived1(Long chatId, String message) {
         String estado = esperandoUsuarios.getOrDefault(chatId, "");
 
         switch (estado) {
+	        case "obtenerColaboradorId":
+	        	obtenerColaboradorId(chatId, message, this);
+	            break;
             case "darDeAltaRuta":
                 botLogistica.darDeAltaRuta(chatId, message, this);
                 break;

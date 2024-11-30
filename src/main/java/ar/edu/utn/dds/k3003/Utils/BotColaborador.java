@@ -1,7 +1,6 @@
 package ar.edu.utn.dds.k3003.Utils;
 
 import ar.edu.utn.dds.k3003.app.BotApp;
-import ar.edu.utn.dds.k3003.model.RetiroDTODay;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -20,7 +19,7 @@ import java.util.List;
 public class BotColaborador {
 
     Dotenv dotenv = Dotenv.load();
-    String url = /*"https://colaboradores-prueba.onrender.com"*/dotenv.get("URL_COLABORADOR");
+    String url = /*"https://colaboradores-prueba.onrender.com"*/ dotenv.get("URL_COLABORADOR");
     
     public void agregarColaborador(Long chatId, String mensaje, Comandos comandos) {
         String[] partes = mensaje.split("\\s+");

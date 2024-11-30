@@ -1,7 +1,7 @@
 package ar.edu.utn.dds.k3003.Utils;
 
 import ar.edu.utn.dds.k3003.app.BotApp;
-import ar.edu.utn.dds.k3003.model.RetiroDTODay;
+import ar.edu.utn.dds.k3003.app.BotApp.ChatIdRegistry;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -20,7 +20,7 @@ import java.util.List;
 public class BotLogistica {
 
     Dotenv dotenv = Dotenv.load();
-    String urlLogistica = /*"https://logistica-prueba.onrender.com"*/dotenv.get("URL_LOGISTICA");
+    String urlLogistica = /*"https://logistica-prueba.onrender.com"*/ dotenv.get("URL_LOGISTICA");
 
     public void darDeAltaRuta(Long chatId, String mensaje, Comandos comandos) {
 
@@ -43,6 +43,10 @@ public class BotLogistica {
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
+            
+            Long chatIdDestino = ChatIdRegistry.obtenerChatId(colaboradorId);
+            
+            comandos.sendMessage(chatIdDestino, "Se te asigno el traslado desde la heladera id " + heladeraIdOrigen + " hasta la heladera id " + heladeraIdDestino);
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -86,12 +90,12 @@ public class BotLogistica {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 201) {
+            if (response.statusCode() == 200) {
                 comandos.sendMessage(chatId, "Traslado asignado exitosamente");
                 System.out.println("Traslado asignado exitosamente: " + response.body());
             } else {
-                comandos.sendMessage(chatId,"Error al aignar el traslado");
-                System.out.println("Error al aignar el traslado: " + response.statusCode() + " - " + response.body());
+                comandos.sendMessage(chatId,"Error al asignar el traslado");
+                System.out.println("Error al asignar el traslado: " + response.statusCode() + " - " + response.body());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -124,17 +128,23 @@ public class BotLogistica {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() == 201) {
-                comandos.sendMessage(chatId, "Traslado iniciado exitosamente");
-                System.out.println("Traslado iniciado exitosamente: " + response.body());
+            if (response.statusCode() == 200) {
+            	String mensajeTraslado;
+            	if(status == "EN_VIAJE") {
+            		mensajeTraslado = "iniciado";
+            	} else {
+            		mensajeTraslado = "finalizado";
+            	}
+                comandos.sendMessage(chatId, "Traslado " + mensajeTraslado + " exitosamente");
+                System.out.println("Traslado " + mensajeTraslado + " exitosamente: " + response.body());
             } else {
-                comandos.sendMessage(chatId,"Error al aignar el trasladoa");
-                System.out.println("Error al iniciar el traslado: " + response.statusCode() + " - " + response.body());
+                comandos.sendMessage(chatId,"Error al asignar el trasladoa");
+                System.out.println("Error al iniciar el translado: " + response.statusCode() + " - " + response.body());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            comandos.sendMessage(chatId,"Ocurrió un error al asignar el traslado");
-            System.out.println("Ocurrió un error al iniciar el traslado: " + e.getMessage());
+            comandos.sendMessage(chatId,"Ocurrió un error al asignar el translado");
+            System.out.println("Ocurrió un error al iniciar el translado: " + e.getMessage());
         }
     }
 

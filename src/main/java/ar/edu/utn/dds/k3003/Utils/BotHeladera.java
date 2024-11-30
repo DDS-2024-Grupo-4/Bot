@@ -1,8 +1,10 @@
 package ar.edu.utn.dds.k3003.Utils;
 
-import ar.edu.utn.dds.k3003.model.RetiroDTODay;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ar.edu.utn.dds.k3003.model.RetiroDTODay;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -165,6 +167,7 @@ public class BotHeladera {
       if (response.statusCode() == 200) {
         // Parsear la respuesta, asumiendo que la respuesta es una lista de objetos RetiroDTODay en formato JSON
         List<RetiroDTODay> retirosDelDia = parseRetirosDelDia(response.body());
+        System.out.println("Lista de retiros del dia" + response.body());
 
         // Si la lista está vacía, se notifica
         if (retirosDelDia == null || retirosDelDia.isEmpty()) {
@@ -199,11 +202,11 @@ public class BotHeladera {
   private List<RetiroDTODay> parseRetirosDelDia(String jsonResponse) {
     ObjectMapper objectMapper = new ObjectMapper();
     try {
-      // Convertimos la respuesta en una lista de retiroDTODay
-      return objectMapper.readValue(jsonResponse, new TypeReference<List<RetiroDTODay>>(){});
+    	List<RetiroDTODay> lista = objectMapper.readValue(jsonResponse, new TypeReference<List<RetiroDTODay>>(){});
+    	return lista;
     } catch (IOException e) {
-      e.printStackTrace();
-      return null;
+    	e.printStackTrace();
+    	return null;
     }
   }
 
