@@ -48,7 +48,7 @@ public class BotLogistica {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 201) {
-                comandos.sendMessage(chatId, "Ruta creada exitosamente");
+                comandos.sendMessage(chatId, "Ruta creada exitosamente desde la heladera " + heladeraIdOrigen + " hasta la heladera " + heladeraIdDestino);
                 System.out.println("Ruta creada exitosamente: " + response.body());
             } else {
                 comandos.sendMessage(chatId,"Error al crear la ruta");
@@ -90,11 +90,12 @@ public class BotLogistica {
             JSONObject jsonResponse = new JSONObject(response);
 
             Long colaboradorIdTransportista = jsonResponse.getLong("colaboradorId");
+            Long idTraslado = jsonResponse.getLong("id");
 
             Long chatIdTransportista = ChatIdRegistry.obtenerChatId(colaboradorIdTransportista.intValue());
 
             if (response.statusCode() == 200) {
-                comandos.sendMessage(chatIdTransportista, "Traslado asignado exitosamente" + heladeraOrigen + " hasta la heladera id " + heladeraDestino);
+                comandos.sendMessage(chatIdTransportista, "Traslado asignado exitosamente" + "ID: " + idTraslado);
                 System.out.println("Traslado asignado exitosamente: " + response.body());
             } else {
                 comandos.sendMessage(chatId,"Error al asignar el traslado");
