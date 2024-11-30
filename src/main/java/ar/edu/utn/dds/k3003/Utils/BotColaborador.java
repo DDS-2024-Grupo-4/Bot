@@ -244,13 +244,12 @@ public class BotColaborador {
     	int colaboradorId = Integer.parseInt(partes[0]);
     	int heladeraId = Integer.parseInt(partes[1]);
     	String tipoSuscripcion = partes[2];
-    	int cantidadFaltante = Integer.parseInt(partes[3]);
-    	int cantidadDisponible = Integer.parseInt(partes[4]);
+    	int cantidadN = Integer.parseInt(partes[3]);
         
         try {
             String requestBody = String.format(
-                    "{\"colaboradorId\": %d, \"heladeraId\": %d, \"tipoSuscripcion\": \"%s\", \"cantidadFaltante\": %d, \"cantidadDisponible\": %d}",
-                    colaboradorId, heladeraId, tipoSuscripcion, cantidadFaltante, cantidadDisponible
+                    "{\"colaboradorId\": %d, \"heladeraId\": %d, \"tipoSuscripcion\": \"%s\", \"cantidadN\": %d",
+                    colaboradorId, heladeraId, tipoSuscripcion, cantidadN
             );
 
             HttpRequest request = HttpRequest.newBuilder()

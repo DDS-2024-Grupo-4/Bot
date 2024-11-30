@@ -125,8 +125,8 @@ public class Comandos extends TelegramLongPollingBot {
             case   "/suscribirse":
                 esperandoUsuarios.put(chatId, "suscribirse");
                 sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
-                        "`colaboradorId` `heladeraId` `tipoDeSuscripcion` `cantidadFaltante` `cantidadDisponible`\n" +
-                        "Ejemplo: `1` `2` `“ViandasDisponibles“ “FaltanteViandas“ “HeladeraDesperfecto“` `2` `2`");
+                        "`colaboradorId` `heladeraId` `tipoDeSuscripcion` `cantidadN`\n" +
+                        "Ejemplo: `1` `2` `“ViandasDisponibles“ `2`");
                 break;
             default:
                 sendMessage(chatId, "Comando no reconocido.");
