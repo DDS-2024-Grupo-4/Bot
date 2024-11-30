@@ -16,6 +16,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collection;
 import java.util.List;
+import org.json.JSONObject;
 
 public class BotLogistica {
 
@@ -43,10 +44,6 @@ public class BotLogistica {
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
-            
-            Long chatIdDestino = ChatIdRegistry.obtenerChatId(colaboradorId);
-            
-            comandos.sendMessage(chatIdDestino, "Se te asigno el traslado desde la heladera id " + heladeraIdOrigen + " hasta la heladera id " + heladeraIdDestino);
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -89,9 +86,15 @@ public class BotLogistica {
             HttpClient client = HttpClient.newHttpClient();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            //aca busca el colaboradorId de la response
+            JSONObject jsonResponse = new JSONObject(response);
+
+            Long colaboradorIdTransportista = jsonResponse.getLong("colaboradorId");
+
+            Long chatIdTransportista = ChatIdRegistry.obtenerChatId(colaboradorIdTransportista.intValue());
 
             if (response.statusCode() == 200) {
-                comandos.sendMessage(chatId, "Traslado asignado exitosamente");
+                comandos.sendMessage(chatIdTransportista, "Traslado asignado exitosamente" + heladeraOrigen + " hasta la heladera id " + heladeraDestino);
                 System.out.println("Traslado asignado exitosamente: " + response.body());
             } else {
                 comandos.sendMessage(chatId,"Error al asignar el traslado");
