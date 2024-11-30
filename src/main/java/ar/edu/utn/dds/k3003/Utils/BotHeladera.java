@@ -132,7 +132,7 @@ public class BotHeladera {
 	String[] partes = mensaje.split("\\s+");
     int heladeraId = Integer.parseInt(partes[0]);
     try {
-      String uri = url + "/heladera/" + heladeraId + "/cantidadViandasHastaLLenar";
+      String uri = url + "/heladeras/" + heladeraId + "/cantidadViandasHastaLLenar";
 
       // Crear la solicitud GET
       HttpRequest request = HttpRequest.newBuilder()
