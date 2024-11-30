@@ -22,7 +22,7 @@ public class DatosColaboradorDTO {
     private Integer heladerasReparadas;
 
     @JsonCreator
-    public DatosColaboradorDTO(@JsonProperty("id") Integer id,@JsonProperty("nombre") String nombre,@JsonProperty("formas") List<String> formas,@JsonProperty("id") Integer pesosDonados,@JsonProperty("id") Integer heladerasReparadas) {
+    public DatosColaboradorDTO(@JsonProperty("id") Integer id,@JsonProperty("nombre") String nombre,@JsonProperty("formas") List<String> formas,@JsonProperty("pesosDonados") Integer pesosDonados,@JsonProperty("heladerasReparadas") Integer heladerasReparadas) {
       this.id = id;
       this.nombre = nombre;
       this.formas = formas;
