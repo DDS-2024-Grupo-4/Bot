@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import java.net.URI;
@@ -51,7 +52,6 @@ public class BotHeladera {
       if (response.statusCode() == 200) {
         System.out.println("Historial de incidentes: " + response.body());
         List<IncidenteDTO> incidenteDTOS = parseIncidenteDTO(response.body());
-        comandos.sendMessage(chatId, "Historial de incidentes: " + response.body());
 
           if (incidenteDTOS == null || incidenteDTOS.isEmpty()) {
               String mssge = "No se han registrado incidentes para esta heladera.";
@@ -242,14 +242,23 @@ public class BotHeladera {
 
   private List<IncidenteDTO> parseIncidenteDTO(String jsonResponse) {
         ObjectMapper objectMapper = new ObjectMapper();
-        //objectMapper.registerModule(new JavaTimeModule());
-        try {
-            List<IncidenteDTO> lista = objectMapper.readValue(jsonResponse, new TypeReference<List<IncidenteDTO>>(){});
-            return lista;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+      try {
+          // Parse the JSON array into a List of Lists (Object) first
+          List<List<Object>> list = objectMapper.readValue(jsonResponse, new TypeReference<List<List<Object>>>(){});
+          List<IncidenteDTO> incidenteList = new ArrayList<>();
+
+          for (List<Object> incident : list) {
+              Integer incidenteId = (Integer) incident.get(0);
+              String fechaIncidente = (String) incident.get(5);
+              String tipoIncidente = (String) incident.get(6);
+              incidenteList.add(new IncidenteDTO(tipoIncidente, incidenteId, fechaIncidente));
+          }
+          return incidenteList;
+
+      } catch (IOException e) {
+          e.printStackTrace();
+          return null;
+      }
     }
 
 

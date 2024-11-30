@@ -9,13 +9,13 @@ import java.time.format.DateTimeFormatter;
 public class IncidenteDTO {
 
         public String tipoIncidente;
-        public Integer heladeraId;
+        public Integer incidenteId;
         public String fechaIncidente;
 
         @JsonCreator
-        public IncidenteDTO(@JsonProperty("tipoIncidente") String tipoIncidente,  @JsonProperty("heladeraId") Integer heladeraId, @JsonProperty("fechaIncidente") String fechaIncidente) {
+        public IncidenteDTO(@JsonProperty("tipoIncidente") String tipoIncidente,  @JsonProperty("incidenteId") Integer incidenteId, @JsonProperty("fechaIncidente") String fechaIncidente) {
             this.tipoIncidente = tipoIncidente;
-            this.heladeraId = heladeraId;
+            this.incidenteId = incidenteId;
             this.fechaIncidente = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
         }
 
@@ -23,8 +23,8 @@ public class IncidenteDTO {
         return tipoIncidente;
     }
 
-    public Integer getHeladeraId() {
-        return heladeraId;
+    public Integer getIncidenteId() {
+        return incidenteId;
     }
 
     public String getFechaIncidente() {
