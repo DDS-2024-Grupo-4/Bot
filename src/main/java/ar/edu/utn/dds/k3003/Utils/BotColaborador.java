@@ -253,7 +253,7 @@ public class BotColaborador {
             );
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url + "/suscribirse"))
+                    .uri(URI.create(url + "/colaboradores/suscribirse"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
