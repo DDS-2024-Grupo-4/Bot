@@ -66,8 +66,8 @@ public class BotLogistica {
         String[] partes = mensaje.split("\\s+");
 
         String listQrViandas = partes[0];
-        String status = partes[1];
-        String fechaTraslado = partes[2];
+        String status = "CREADO";
+        String fechaTraslado = "2024-05-15T21:10:40Z";
         int heladeraOrigen = Integer.parseInt(partes[3]);
         int heladeraDestino = Integer.parseInt(partes[4]);
 
