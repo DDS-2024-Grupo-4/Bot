@@ -42,8 +42,8 @@ public class Comandos extends TelegramLongPollingBot {
             case "/asignarTraslado":
                 esperandoUsuarios.put(chatId, "asignarTraslado");
                 sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
-                        "`listQrViandas status fechaTraslado heladeraOrigen heladeraDestino`\n" +
-                        "Ejemplo: `[asd] CREADO 2024-05-15T21:10:40Z 1 2`");
+                        "`listQrViandas heladeraOrigen heladeraDestino`\n" +
+                        "Ejemplo: `[asd] 1 2`");
                 break;
             case "/iniciarTraslado":
                 esperandoUsuarios.put(chatId, "iniciarFinalizarTraslado");
