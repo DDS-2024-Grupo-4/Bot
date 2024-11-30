@@ -16,7 +16,7 @@ public class IncidenteDTO {
         public IncidenteDTO(@JsonProperty("tipoIncidente") String tipoIncidente,  @JsonProperty("incidenteId") Integer incidenteId, @JsonProperty("fechaIncidente") String fechaIncidente) {
             this.tipoIncidente = tipoIncidente;
             this.incidenteId = incidenteId;
-            this.fechaIncidente = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now());
+            this.fechaIncidente = fechaIncidente;
         }
 
     public String getTipoIncidente() {
