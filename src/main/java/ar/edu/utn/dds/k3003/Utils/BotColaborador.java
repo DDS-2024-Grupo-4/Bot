@@ -248,7 +248,7 @@ public class BotColaborador {
         
         try {
             String requestBody = String.format(
-                    "{\"colaboradorId\": %d, \"heladeraId\": %d, \"tipoSuscripcion\": \"%s\", \"cantidadN\": %d",
+                    "{\"colaboradorId\": %d, \"heladeraId\": %d, \"tipoSuscripcion\": \"%s\", \"cantidadN\": %d}",
                     colaboradorId, heladeraId, tipoSuscripcion, cantidadN
             );
 
