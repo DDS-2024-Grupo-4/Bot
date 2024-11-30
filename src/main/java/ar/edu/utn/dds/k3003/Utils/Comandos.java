@@ -83,8 +83,8 @@ public class Comandos extends TelegramLongPollingBot {
                         "`colaboradorID heladeraID`\n" +
                         "Ejemplo: `1 4`");
                 break;
-            case   "/verMisPuntos":
-                esperandoUsuarios.put(chatId, "verMisPuntos");
+            case   "/verMisDatos":
+                esperandoUsuarios.put(chatId, "verMisDatos");
                 sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
                         "`colaboradorID`\n" +
                         "Ejemplo: `1`");
@@ -160,7 +160,7 @@ public class Comandos extends TelegramLongPollingBot {
                 "/modificarFormaDeColaborar\n" +
                 "/reportarHeladeraRota\n" +
                 "/repararHeladera - reporta que la heladera ha sido reparada\n" +
-                "/verMisPuntos\n" +     //Si me da tiempo agregar forma de ver reparaciones, donaciones de dinero, etc
+                "/verMisDatos\n" +     //Si me da tiempo agregar forma de ver reparaciones, donaciones de dinero, etc
                 "/suscribirse - Se suscribe a un tipo de evento de heladera\n\n" +
                 "VIANDAS:\n" +
                 "/crearYDepositarVianda - Crea y Deposita una vianda en una heladera\n\n" +
@@ -211,8 +211,8 @@ public class Comandos extends TelegramLongPollingBot {
             case "repararHeladera":
             	botColaborador.repararHeladera(chatId, message, this);
                 break;
-            case "verMisPuntos":
-                botColaborador.verMisPuntos(chatId, message, this);
+            case "verMisDatos":
+                botColaborador.verMisDatos(chatId, message, this);
                 break;
             case "suscribirse":
             	botColaborador.suscribirse(chatId, message, this);
@@ -237,6 +237,10 @@ public class Comandos extends TelegramLongPollingBot {
                 break;
             
         }
+    }
+    
+    public Integer getIdColaboradorActual() {
+    	return idColaboradorActual;
     }
 
     @Override

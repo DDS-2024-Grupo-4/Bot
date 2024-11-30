@@ -1,7 +1,9 @@
 package ar.edu.utn.dds.k3003.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.time.LocalDateTime;
 
@@ -9,12 +11,13 @@ public class RetiroDTODay {
 	
     private String qrVianda;
     private String tarjeta;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+//    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime fechaRetiro;
     private Integer heladeraId;
 
     // Constructor
-    public RetiroDTODay(String qrVianda, String tarjeta, LocalDateTime fechaRetiro, Integer heladeraId) {
+    @JsonCreator
+    public RetiroDTODay(@JsonProperty("qrVianda") String qrVianda, @JsonProperty("tarjeta") String tarjeta, @JsonProperty("fechaRetiro") LocalDateTime fechaRetiro, @JsonProperty("heladeraId") Integer heladeraId) {
       this.qrVianda = qrVianda;
       this.tarjeta = tarjeta;
       this.fechaRetiro = fechaRetiro;

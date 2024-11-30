@@ -1,6 +1,7 @@
 package ar.edu.utn.dds.k3003.Utils;
 
 import ar.edu.utn.dds.k3003.app.BotApp;
+import ar.edu.utn.dds.k3003.model.DatosColaboradorDTO;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -19,7 +20,7 @@ import java.util.List;
 public class BotColaborador {
 
     Dotenv dotenv = Dotenv.load();
-    String url = /*"https://colaboradores-prueba.onrender.com"*/ dotenv.get("URL_COLABORADOR");
+    String url = "https://colaboradores-prueba.onrender.com" /*dotenv.get("URL_COLABORADOR")*/;
     
     public void agregarColaborador(Long chatId, String mensaje, Comandos comandos) {
         String[] partes = mensaje.split("\\s+");
@@ -174,25 +175,42 @@ public class BotColaborador {
         }
     }
 
-    public void verMisPuntos(Long chatId, String mensaje, Comandos comandos) {
+    public void verMisDatos(Long chatId, String mensaje, Comandos comandos) {
     	String[] partes = mensaje.split("\s+");
 
-        int id = Integer.parseInt(partes[0]);
+        int id = comandos.getIdColaboradorActual();
         try {
-            String uri = String.format("/colaboradores/%d/puntos",
-                    id
-            );
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url + uri))
+            String uriPuntos = String.format("/colaboradores/%d/puntos", id);
+            String uriColaborador = String.format("/colaboradores/%d", id);
+
+            HttpRequest requestPuntos = HttpRequest.newBuilder()
+                    .uri(URI.create(url + uriPuntos))
+                    .header("Content-Type", "application/json")
+                    .GET()
+                    .build();
+            HttpRequest requestColaborador = HttpRequest.newBuilder()
+                    .uri(URI.create(url + uriColaborador))
                     .header("Content-Type", "application/json")
                     .GET()
                     .build();
 
             HttpClient client = HttpClient.newHttpClient();
 
-            HttpResponse<String> response1 = client.send(request, HttpResponse.BodyHandlers.ofString());
-            comandos.sendMessage(chatId, "Tenés esta cantidad de puntos: " + response1.body());
-                System.out.println("Tenés esta cantidad de puntos: " + response1.body());
+            HttpResponse<String> responsePuntos = client.send(requestPuntos, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> responseColaborador = client.send(requestColaborador, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println(responseColaborador.body());
+            
+            DatosColaboradorDTO datosColaborador = parseDatosColaborador(responseColaborador.body());
+            
+            comandos.sendMessage(chatId, "Id de colaborador: " + datosColaborador.getId() 
+            							+ "\n Nombre del colaborador: " + datosColaborador.getNombre()
+            							+ "\n Formas de colaboracion: " + datosColaborador.getFormas()
+            							+ "\n Cantidad de Puntos: " + responsePuntos.body());
+            System.out.println("Id de colaborador: " + datosColaborador.getId() 
+										+ "\n Nombre del colaborador: " + datosColaborador.getNombre()
+										+ "\n Formas de colaboracion: " + datosColaborador.getFormas()
+										+ "\n Cantidad de Puntos: " + responsePuntos.body());
         } catch (Exception e) {
             e.printStackTrace();
             comandos.sendMessage(chatId, "Ocurrió un error al buscar puntos");
@@ -200,6 +218,17 @@ public class BotColaborador {
         }
 
     }
+    
+    public static DatosColaboradorDTO parseDatosColaborador(String responseBody) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+        	DatosColaboradorDTO datosColaborador = objectMapper.readValue(responseBody, DatosColaboradorDTO.class);
+        	return datosColaborador;
+        } catch (IOException e) {
+          e.printStackTrace();
+          return null;
+        }
+      }
     
     public void suscribirse(Long chatId, String mensaje, Comandos comandos) {
     	String[] partes = mensaje.split("\\s+");
@@ -246,6 +275,8 @@ public class BotColaborador {
             System.out.println("Ocurrió un error al intentar de suscribirse: " + e.getMessage());
         }
     }
+    
+    
     
 }
 
