@@ -19,7 +19,7 @@ import java.util.List;
 public class BotVianda {
 
     Dotenv dotenv = Dotenv.load();
-    String urlViandas = "https://viandas-prueba.onrender.com" /*dotenv.get("URL_VIANDA")*/;
+    String urlViandas = /*"https://viandas-prueba.onrender.com" */dotenv.get("URL_VIANDA");
     
     public void crearYDepositarVianda(Long chatId, String mensaje, Comandos comandos) {
     	String[] partes = mensaje.split("\\s+");

@@ -68,8 +68,8 @@ public class BotLogistica {
         String listQrViandas = partes[0];
         String status = "CREADO";
         String fechaTraslado = "2024-05-15T21:10:40Z";
-        int heladeraOrigen = Integer.parseInt(partes[3]);
-        int heladeraDestino = Integer.parseInt(partes[4]);
+        int heladeraOrigen = Integer.parseInt(partes[1]);
+        int heladeraDestino = Integer.parseInt(partes[2]);
 
         try {
             String requestBody = String.format(
@@ -87,15 +87,15 @@ public class BotLogistica {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             //aca busca el colaboradorId de la response
-            JSONObject jsonResponse = new JSONObject(response);
-
-            Long colaboradorIdTransportista = jsonResponse.getLong("colaboradorId");
+            System.out.println(response.body());
+            JSONObject jsonResponse = new JSONObject(response.body());
+            int colaboradorIdTransportista = jsonResponse.getInt("colaboradorId");
             Long idTraslado = jsonResponse.getLong("id");
 
-            Long chatIdTransportista = ChatIdRegistry.obtenerChatId(colaboradorIdTransportista.intValue());
+            Long chatIdTransportista = ChatIdRegistry.obtenerChatId(colaboradorIdTransportista);
 
             if (response.statusCode() == 200) {
-                comandos.sendMessage(chatIdTransportista, "Traslado asignado exitosamente" + "ID: " + idTraslado);
+                comandos.sendMessage(chatIdTransportista, "Traslado asignado exitosamente " + "ID: " + idTraslado);
                 System.out.println("Traslado asignado exitosamente: " + response.body());
             } else {
                 comandos.sendMessage(chatId,"Error al asignar el traslado");
@@ -134,7 +134,7 @@ public class BotLogistica {
 
             if (response.statusCode() == 200) {
             	String mensajeTraslado;
-            	if(status == "EN_VIAJE") {
+            	if(status.equals("EN_VIAJE")) {
             		mensajeTraslado = "iniciado";
             	} else {
             		mensajeTraslado = "finalizado";

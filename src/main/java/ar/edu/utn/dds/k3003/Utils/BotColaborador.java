@@ -20,7 +20,7 @@ import java.util.List;
 public class BotColaborador {
 
     Dotenv dotenv = Dotenv.load();
-    String url = "https://colaboradores-prueba.onrender.com" /*dotenv.get("URL_COLABORADOR")*/;
+    String url = /*"https://colaboradores-prueba.onrender.com"*/ dotenv.get("URL_COLABORADOR");
     
     public void agregarColaborador(Long chatId, String mensaje, Comandos comandos) {
         String[] partes = mensaje.split("\\s+");
@@ -144,8 +144,8 @@ public class BotColaborador {
     public void repararHeladera(Long chatId, String mensaje, Comandos comandos) {
         String[] partes = mensaje.split("\\s+");
 
-        int id = Integer.parseInt(partes[0]);
-        int heladeraid = Integer.parseInt(partes[1]);
+        int id = comandos.getIdColaboradorActual();;
+        int heladeraid = Integer.parseInt(partes[0]);
         try {
             String requestBody = "";
             String uri = String.format("/colaboradores/%d/reparar/%d",
@@ -175,8 +175,8 @@ public class BotColaborador {
         }
     }
 
-    public void verMisDatos(Long chatId, String mensaje, Comandos comandos) {
-    	String[] partes = mensaje.split("\s+");
+    public void verMisDatos(Long chatId, Comandos comandos) {
+    	//String[] partes = mensaje.split("\s+");
 
         int id = comandos.getIdColaboradorActual();
         try {
@@ -206,13 +206,15 @@ public class BotColaborador {
             comandos.sendMessage(chatId, "Id de colaborador: " + datosColaborador.getId()
             							+ "\n Nombre del colaborador: " + datosColaborador.getNombre()
                                         + "\n Formas de colaboracion: " + datosColaborador.getFormas()
-                                        + "\n Formas de colaboracion: " + datosColaborador.getPesosDonados()
-                                        + "\n Formas de colaboracion: " + datosColaborador.getHeladerasReparadas()
+                                        + "\n Pesos Donados: " + datosColaborador.getPesosDonados()
+                                        + "\n Heladeras Reparadas: " + datosColaborador.getHeladerasReparadas()
             							+ "\n Cantidad de Puntos: " + responsePuntos.body());
-            System.out.println("Id de colaborador: " + datosColaborador.getId() 
-										+ "\n Nombre del colaborador: " + datosColaborador.getNombre()
-										+ "\n Formas de colaboracion: " + datosColaborador.getFormas()
-										+ "\n Cantidad de Puntos: " + responsePuntos.body());
+            System.out.println("Id de colaborador: " + datosColaborador.getId()
+                    + "\n Nombre del colaborador: " + datosColaborador.getNombre()
+                    + "\n Formas de colaboracion: " + datosColaborador.getFormas()
+                    + "\n Pesos Donados: " + datosColaborador.getPesosDonados()
+                    + "\n Heladeras Reparadas: " + datosColaborador.getHeladerasReparadas()
+                    + "\n Cantidad de Puntos: " + responsePuntos.body());
         } catch (Exception e) {
             e.printStackTrace();
             comandos.sendMessage(chatId, "Ocurrió un error al buscar puntos");

@@ -19,7 +19,7 @@ import java.util.List;
 public class BotHeladera {
 
   Dotenv dotenv = Dotenv.load();
-  String url = "https://heladeras-prueba.onrender.com" /*dotenv.get("URL_HELADERA")*/;
+  String url = /*"https://heladeras-prueba.onrender.com"*/ dotenv.get("URL_HELADERA");
 
   public void verIncidentesDeHeladera(Long chatId, String mensaje, Comandos comandos){
 	  String[] partes = mensaje.split("\\s+");

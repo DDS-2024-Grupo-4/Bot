@@ -80,14 +80,11 @@ public class Comandos extends TelegramLongPollingBot {
             case   "/repararHeladera":
                 esperandoUsuarios.put(chatId, "repararHeladera");
                 sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
-                        "`colaboradorID heladeraID`\n" +
-                        "Ejemplo: `1 4`");
+                        "`heladeraID`\n" +
+                        "Ejemplo: `1`");
                 break;
             case   "/verMisDatos":
-                esperandoUsuarios.put(chatId, "verMisDatos");
-                sendMessage(chatId, "Por favor, envía los datos en el siguiente formato:\n" +
-                        "`colaboradorID`\n" +
-                        "Ejemplo: `1`");
+                botColaborador.verMisDatos(chatId, this);
                 break;
             case   "/crearYDepositarVianda":
                 esperandoUsuarios.put(chatId, "crearYDepositarVianda");
@@ -210,9 +207,6 @@ public class Comandos extends TelegramLongPollingBot {
                 break;
             case "repararHeladera":
             	botColaborador.repararHeladera(chatId, message, this);
-                break;
-            case "verMisDatos":
-                botColaborador.verMisDatos(chatId, message, this);
                 break;
             case "suscribirse":
             	botColaborador.suscribirse(chatId, message, this);
