@@ -9,6 +9,15 @@ import io.github.cdimascio.dotenv.Dotenv;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.core.type.TypeReference;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -152,7 +161,7 @@ public class BotHeladera {
 	  String[] partes = mensaje.split("\\s+");
 	  int heladeraId = Integer.parseInt(partes[0]);
     try {
-      String uri = url + "/heladera/" + heladeraId + "/obtenerRetirosDelDia";
+      String uri = url + "/heladeras/" + heladeraId + "/obtenerRetirosDelDia";
 
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(uri))
@@ -201,6 +210,7 @@ public class BotHeladera {
 
   private List<RetiroDTODay> parseRetirosDelDia(String jsonResponse) {
     ObjectMapper objectMapper = new ObjectMapper();
+    //objectMapper.registerModule(new JavaTimeModule());
     try {
     	List<RetiroDTODay> lista = objectMapper.readValue(jsonResponse, new TypeReference<List<RetiroDTODay>>(){});
     	return lista;

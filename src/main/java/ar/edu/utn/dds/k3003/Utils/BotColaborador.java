@@ -3,6 +3,7 @@ package ar.edu.utn.dds.k3003.Utils;
 import ar.edu.utn.dds.k3003.app.BotApp;
 import ar.edu.utn.dds.k3003.model.DatosColaboradorDTO;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.json.JSONObject;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -50,8 +51,11 @@ public class BotColaborador {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+            JSONObject jsonResponse = new JSONObject(response.body());
+            int colaboradorId = jsonResponse.getInt("id");
+
             if (response.statusCode() == 201) {
-                comandos.sendMessage(chatId, "Colaborador creado exitosamente");
+                comandos.sendMessage(chatId, "Colaborador " + colaboradorId + " creado exitosamente");
                 System.out.println("Colaborador creado exitosamente: " + response.body());
             } else {
                 comandos.sendMessage(chatId,"Error al crear colaborador");
