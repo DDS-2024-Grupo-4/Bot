@@ -1,6 +1,7 @@
 package ar.edu.utn.dds.k3003.Utils;
 
 
+import ar.edu.utn.dds.k3003.model.IncidenteDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,9 +50,28 @@ public class BotHeladera {
 
       if (response.statusCode() == 200) {
         System.out.println("Historial de incidentes: " + response.body());
+        List<IncidenteDTO> incidenteDTOS = parseIncidenteDTO(response.body());
         comandos.sendMessage(chatId, "Historial de incidentes: " + response.body());
+
+          if (incidenteDTOS == null || incidenteDTOS.isEmpty()) {
+              String mssge = "No se han registrado incidentes para esta heladera.";
+              comandos.sendMessage(chatId, mssge);
+              System.out.println(mssge);
+              return;
+          }
+
+          StringBuilder mssge = new StringBuilder("Historial de incidentes para la Heladera " + heladeraId + ":\n");
+          for (IncidenteDTO incidente : incidenteDTOS) {
+              mssge.append(String.format("Tipo Incidente: %s, Fecha de Incidente: %s\n",
+                      incidente.getTipoIncidente(), incidente.getFechaIncidente()));
+          }
+
+          comandos.sendMessage(chatId, mssge.toString());
+          System.out.println(mssge.toString());
+
+
       } else {
-        System.out.println("Error al obtener el historial de incidentes: " + response.statusCode() + " - " + response.body());
+        System.out.println("Error al obtener el historial de incidentes: Codigo de estado" + response.statusCode() + " - " + response.body());
         comandos.sendMessage(chatId, "Error al obtener el historial de incidentes");
       }
     } catch (Exception e) {
@@ -219,6 +239,19 @@ public class BotHeladera {
     	return null;
     }
   }
+
+  private List<IncidenteDTO> parseIncidenteDTO(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        //objectMapper.registerModule(new JavaTimeModule());
+        try {
+            List<IncidenteDTO> lista = objectMapper.readValue(jsonResponse, new TypeReference<List<IncidenteDTO>>(){});
+            return lista;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
   public static List<Integer> parseViandasInfo(String responseBody) {
     ObjectMapper objectMapper = new ObjectMapper();
