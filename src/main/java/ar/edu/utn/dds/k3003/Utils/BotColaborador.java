@@ -203,9 +203,11 @@ public class BotColaborador {
             
             DatosColaboradorDTO datosColaborador = parseDatosColaborador(responseColaborador.body());
             
-            comandos.sendMessage(chatId, "Id de colaborador: " + datosColaborador.getId() 
+            comandos.sendMessage(chatId, "Id de colaborador: " + datosColaborador.getId()
             							+ "\n Nombre del colaborador: " + datosColaborador.getNombre()
-            							+ "\n Formas de colaboracion: " + datosColaborador.getFormas()
+                                        + "\n Formas de colaboracion: " + datosColaborador.getFormas()
+                                        + "\n Formas de colaboracion: " + datosColaborador.getPesosDonados()
+                                        + "\n Formas de colaboracion: " + datosColaborador.getHeladerasReparadas()
             							+ "\n Cantidad de Puntos: " + responsePuntos.body());
             System.out.println("Id de colaborador: " + datosColaborador.getId() 
 										+ "\n Nombre del colaborador: " + datosColaborador.getNombre()
